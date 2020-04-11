@@ -1,9 +1,23 @@
 
 from direction import *
+from enum import Enum
+
+
+class CellSymbol(Enum):
+    Empty = '.'
+    Stun = 'S'
+    RubberRoom = '_'  # computing
+    Teleport = 'T'
+    Armory = 'A'
+    Exit = 'E'
+
+
+cell_symbols = {cell.name: cell.value for cell in CellSymbol}
 
 
 class Cell:
     def __init__(self, x=0, y=0):
+        self.name = type(self).__name__
         self.x = x
         self.y = y
         self.borders = {direction: False for direction in Direction}
@@ -17,6 +31,9 @@ class Cell:
 
     def has_border_at(self, direction: Direction):
         return self.borders[direction]
+
+    def to_symbol(self):
+        return cell_symbols[self.name]
 
 
 class Empty(Cell):
@@ -36,6 +53,9 @@ class RubberRoom(Cell):
     def __init__(self, direction: Direction):
         super().__init__()
         self.direction = direction
+
+    def to_symbol(self):
+        return self.direction.to_char()
 
 
 class Teleport(Cell):
