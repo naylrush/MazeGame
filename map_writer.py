@@ -1,11 +1,10 @@
 
 from cell import *
 from direction import *
-from map import *
 from copy import deepcopy
 
 
-def write_map(map: Map, path=''):
+def write_map(map, path=''):
     sym_map = [[] for _ in range(map.x_size * 2 - 1)]
 
     empty_sym = Empty().to_symbol()

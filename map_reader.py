@@ -1,7 +1,6 @@
 
 from cell import *
 from direction import *
-from map import *
 from copy import deepcopy
 
 
@@ -47,4 +46,4 @@ def read_map(path: str):
                     map[column + 1][line].add_border_at(UP)
                 line += 1
     file.close()
-    return Map(map)
+    return map
