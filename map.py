@@ -1,6 +1,11 @@
 
 class Map:
-    def __init__(self, map_: [[]]):
-        self.map_ = map_
-        self.x = len(map_)
-        self.y = len(map_[0])
+    def __init__(self, map):
+        if not isinstance(map, type([[]])):
+            raise
+        self.map = map
+        self.x_size = len(map)
+        self.y_size = len(map[0])
+
+    def __getitem__(self, i):
+        return self.map[i]

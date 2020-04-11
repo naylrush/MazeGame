@@ -1,10 +1,9 @@
 
-from numpy.core import uint
-from direction import Direction
+from direction import *
 
 
 class Cell:
-    def __init__(self, x=uint(0), y=uint(0)):
+    def __init__(self, x=0, y=0):
         self.x = x
         self.y = y
         self.borders = {direction: False for direction in Direction}
@@ -16,7 +15,7 @@ class Cell:
     def add_border_at(self, direction: Direction):
         self.borders[direction] = True
 
-    def has_border_ar(self, direction: Direction):
+    def has_border_at(self, direction: Direction):
         return self.borders[direction]
 
 
@@ -26,7 +25,9 @@ class Empty(Cell):
 
 
 class Stun(Cell):
-    def __init__(self, duration: uint):
+    def __init__(self, duration: int):
+        if duration < 0:
+            raise
         super().__init__()
         self.duration = duration
 
@@ -38,7 +39,7 @@ class RubberRoom(Cell):
 
 
 class Teleport(Cell):
-    def __init__(self, x: uint, y: uint):
+    def __init__(self, x: int, y: int):
         super().__init__()
         self.destination = Cell(x, y)
 
