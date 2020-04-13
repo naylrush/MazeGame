@@ -1,6 +1,7 @@
 
-from direction import *
+from direction import Direction
 from enum import Enum
+from point import Point
 
 
 class CellSymbol(Enum):
@@ -16,15 +17,13 @@ cell_symbols = {cell.name: cell.value for cell in CellSymbol}
 
 
 class Cell:
-    def __init__(self, x=0, y=0):
+    def __init__(self, position=Point()):
         self.name = type(self).__name__
-        self.x = x
-        self.y = y
+        self.position = position
         self.borders = {direction: False for direction in Direction}
 
-    def locate_at(self, cell):
-        self.x = cell.x
-        self.y = cell.y
+    def locate_at(self, position):
+        self.position = position
 
     def add_border_at(self, direction: Direction):
         self.borders[direction] = True
@@ -59,9 +58,9 @@ class RubberRoom(Cell):
 
 
 class Teleport(Cell):
-    def __init__(self, x: int, y: int):
+    def __init__(self, destination: Point):
         super().__init__()
-        self.destination = Cell(x, y)
+        self.destination = Cell(destination)
 
 
 class Armory(Cell):

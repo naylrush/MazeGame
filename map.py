@@ -1,6 +1,7 @@
 
 from map_reader import *
 from map_writer import *
+from point import Point
 
 
 class Map:
@@ -15,6 +16,9 @@ class Map:
 
     def __getitem__(self, i):
         return self.map[i]
+
+    def get(self, point: Point):
+        return self.map[point.x][point.y]
 
     def read_from(self, path: str):
         self.__init__(read_map(path))
