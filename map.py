@@ -1,4 +1,5 @@
 
+from map_checker import *
 from map_reader import *
 from map_writer import *
 from point import Point
@@ -22,6 +23,9 @@ class Map:
 
     def is_out_of_map(self, position: Point):
         return position.x < 0 or position.x >= self.x_size or position.y < 0 or position.y >= self.y_size
+
+    def has_route_from(self, start: Point):
+        return map_has_route_from(start, self)
 
     def read_from(self, path: str):
         self.__init__(read_map(path))

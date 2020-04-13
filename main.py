@@ -8,4 +8,5 @@ if __name__ == "__main__":
     map = Map()
     map.read_from(in_path)
     map.write_to()
+    print(map.has_route_from(Point(0, 0)))
     # map.write_to(out_path)
