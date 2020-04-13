@@ -20,6 +20,9 @@ class Map:
     def get(self, point: Point):
         return self.map[point.x][point.y]
 
+    def is_out_of_map(self, position: Point):
+        return position.x < 0 or position.x >= self.x_size or position.y < 0 or position.y >= self.y_size
+
     def read_from(self, path: str):
         self.__init__(read_map(path))
 
