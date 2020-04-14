@@ -2,11 +2,10 @@
 from cell import Exit
 from direction import Direction
 from player import Player
-from point import Point
 from queue import Queue
 
 
-def map_has_route_from(start: Point, map):
+def map_has_route_from(start, map):
     visited = [[False for _ in range(map.y_size)] for _ in range(map.x_size)]
     queue = Queue()
     queue.put(Player(map, start))

@@ -1,6 +1,6 @@
 
 from direction import *
-from point import Point
+from position import Position
 
 
 class Inventory:
@@ -13,14 +13,14 @@ class Inventory:
 
 
 class Player:
-    def __init__(self, map, start_position=Point(), id=0):
+    def __init__(self, map, start_position=Position(), id=0):
         self.map = map
         self.position = start_position
         self.id = id
         self.inventory = Inventory()
         self.stun = 0
 
-    def move_to(self, position: Point):
+    def move_to(self, position: Position):
         self.position = position
 
     def go_to(self, direction: Direction):

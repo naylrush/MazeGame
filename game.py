@@ -3,20 +3,20 @@ from direction import *
 from game_impl import GameImpl
 from map import Map
 from player import Player
-from point import Point
+from position import Position
 from random import randint
 
 
 class Game:
     def random_position_on_map(self, map: Map):
-        return Point(randint(0, map.x_size - 1), randint(0, map.y_size - 1))
+        return Position(randint(0, map.x_size - 1), randint(0, map.y_size - 1))
 
     def __init__(self,  maps=None, players_count=0, players_positions=None):
         if maps is None or not isinstance(maps, type([Map])) or len(maps) == 0:
             raise Exception('maps are not given or they are not [Map]')
         if players_count <= 0 or not isinstance(players_count, int):
             raise Exception('players_count is not int or <= 0')
-        if players_positions is not None and not isinstance(players_positions, type([Point])):
+        if players_positions is not None and not isinstance(players_positions, type([Position])):
             raise Exception('players_positions is not [Point]')
         self.map = maps[0]
         self.maps = maps  # not implemented

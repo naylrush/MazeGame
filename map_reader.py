@@ -2,7 +2,7 @@
 from cell import *
 from copy import deepcopy
 from direction import *
-from point import Point
+from position import Position
 
 
 def read_map(path: str):
@@ -27,7 +27,7 @@ def read_map(path: str):
             y = 0
             for sym in lines[1 + x * 2][::2]:
                 cell = deepcopy(cell_symbols[sym])
-                cell.locate_at(Point(x, y))
+                cell.locate_at(Position(x, y))
                 map[x].append(cell)
                 y += 1
         # read vertical walls

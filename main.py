@@ -3,7 +3,7 @@ import sys
 from map import Map
 from game import Game
 
-from point import Point
+from position import Position
 
 if __name__ == "__main__":
     in_path = sys.argv[1]

@@ -2,7 +2,7 @@
 from map_checker import *
 from map_reader import *
 from map_writer import *
-from point import Point
+from position import Position
 
 
 class Map:
@@ -18,13 +18,13 @@ class Map:
     def __getitem__(self, i):
         return self.map[i]
 
-    def get(self, point: Point):
-        return self.map[point.x][point.y]
+    def get(self, position: Position):
+        return self.map[position.x][position.y]
 
-    def is_out_of_map(self, position: Point):
+    def is_out_of_map(self, position: Position):
         return position.x < 0 or position.x >= self.x_size or position.y < 0 or position.y >= self.y_size
 
-    def has_route_from(self, start: Point):
+    def has_route_from(self, start: Position):
         return map_has_route_from(start, self)
 
     def read_from(self, path: str):
