@@ -43,7 +43,7 @@ class Empty(Cell):
 class Stun(Cell):
     def __init__(self, duration: int):
         if duration < 0:
-            raise
+            raise Exception('duration must be >= 0')
         super().__init__()
         self.duration = duration
 

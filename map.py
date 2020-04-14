@@ -10,7 +10,7 @@ class Map:
         if map is None:
             map = [[]]
         if not isinstance(map, type([[]])):
-            raise
+            raise Exception('map is not a two-dimension array')
         self.map = map
         self.x_size = len(map)
         self.y_size = len(map[0])

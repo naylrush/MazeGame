@@ -8,27 +8,33 @@ from random import randint
 
 
 class Game:
-    def __init__(self, map: Map, players: int, positions=None):
-        self.game_impl = GameImpl()
-        if players < 0:
-            raise
-        self.map = map
+    def random_position_on_map(self, map: Map):
+        return Point(randint(0, map.x_size - 1), randint(0, map.y_size - 1))
+
+    def __init__(self,  maps=None, players_count=0, players_positions=None):
+        if maps is None or not isinstance(maps, type([Map])) or len(maps) == 0:
+            raise Exception('maps are not given or they are not [Map]')
+        if players_count <= 0 or not isinstance(players_count, int):
+            raise Exception('players_count is not int or <= 0')
+        if players_positions is not None and not isinstance(players_positions, type([Point])):
+            raise Exception('players_positions is not [Point]')
+        self.map = maps[0]
+        self.maps = maps  # not implemented
         self.players = []
-        if isinstance(positions, type([])):
-            if len(positions) != players:
-                raise
-            for position in positions:
-                if not map.has_route_from(position):
-                    raise
-                self.players.append(Player(map, position))
-        else:
-            for _ in range(players):
-                position = self.random_position(map)
-                if map.has_route_from(position):
-                    self.players.append(Player(map, position))
+        for i in range(players_count):
+            if players_positions is not None and i < len(players_positions):
+                if not maps[0].has_route_from(players_positions[i]):
+                    raise Exception('Player ' + str(i) + 'has not route to the exit')
+                self.players.append(Player(maps[0], players_positions[i], i))
+            else:
+                random_position = self.random_position_on_map(maps[0])
+                while not maps[0].has_route_from(random_position):
+                    random_position = self.random_position_on_map(maps[0])
+                self.players.append(Player(maps[0], random_position, i))
         self.game_is_over = False
         self.current_player_id = 0
         self.current_player = self.players[self.current_player_id]
+        self.game_impl = GameImpl()
 
     def wait_for_action(self):
         while not self.game_is_over:

@@ -16,7 +16,10 @@ class Point:
         self.x = -self.x
         self.y = -self.y
 
-    # because of way of storage a map
+    def __str__(self):
+        return str((self.x, self.y))
+
+    # because of the way of storage a map
     def shift_to(self, direction: Direction):
         shift_by_direction = {UP: Point(-1, 0), LEFT: Point(0, -1), DOWN: Point(1, 0), RIGHT: Point(0, 1)}
         self.__add__(shift_by_direction[direction])
