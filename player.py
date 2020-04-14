@@ -3,10 +3,22 @@ from direction import *
 from point import Point
 
 
+class Inventory:
+    def __init__(self, bullets=0):
+        self.bullets = bullets
+        self.max_bullets = 3
+
+    def update_bullets(self):
+        self.bullets = self.max_bullets
+
+
 class Player:
-    def __init__(self, map, start_position=Point()):
-        self.position = start_position
+    def __init__(self, map, start_position=Point(), id=0):
         self.map = map
+        self.position = start_position
+        self.id = id
+        self.inventory = Inventory()
+        self.stun = 0
 
     def move_to(self, position: Point):
         self.position = position
