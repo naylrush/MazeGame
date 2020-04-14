@@ -1,12 +1,14 @@
 
 import sys
-from map import *
+from map import Map
+from game import Game
+
+from point import Point
 
 if __name__ == "__main__":
     in_path = sys.argv[1]
-    out_path = './map_2.txt'
     map = Map()
     map.read_from(in_path)
-    map.write_to()
-    print(map.has_route_from(Point(0, 0)))
-    # map.write_to(out_path)
+    # game = Game(map, 1, [Point(0, 2)])
+    game = Game(map, 1)
+    game.start_game()

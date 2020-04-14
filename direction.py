@@ -21,3 +21,10 @@ UP = Direction.UP
 LEFT = Direction.LEFT
 DOWN = Direction.DOWN
 RIGHT = Direction.RIGHT
+
+
+def direction_by_key(key: str):
+    direction_by_key_dict = {'w': UP, 'a': LEFT, 's': DOWN, 'd': RIGHT}
+    if key in direction_by_key_dict:
+        return direction_by_key_dict[key]
+    return None
