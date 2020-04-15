@@ -1,5 +1,6 @@
 
 from cell import *
+from game_map import GameMap
 
 
 class GameImpl:
@@ -22,15 +23,15 @@ class GameImpl:
 
     def teleport_to(self, game, destination):
         print('You have been teleported')
-        game.current_player.move_to(destination)
+        game.game_map.player_move_to(destination)
 
     def gave_over(self, game):
         game.game_is_over = True
         print('Game is over! Player ' + str(game.current_player_id) + ' wins!')
 
     def move_to(self, game, direction: Direction):
+        current_cell = game.game_map.player_cell(game.current_player)
         # before step
-        current_cell = game.map.get(game.current_player.position)
         if isinstance(current_cell, RubberRoom) and direction != current_cell.direction:
             self.successful(game)
             return
@@ -38,11 +39,11 @@ class GameImpl:
             self.gave_over(game)
             return
         # step
-        if not game.current_player.try_go_to(direction):
+        if not game.game_map.player_try_go_to(game.current_player, direction):
             self.unsuccessful(game)
         else:
             self.successful(game)
-            current_cell = game.map.get(game.current_player.position)
+            current_cell = game.game_map.player_cell(game.current_player)
             if isinstance(current_cell, Armory):
                 self.update_bullets(game)
                 return

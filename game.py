@@ -1,6 +1,7 @@
 
 from direction import *
 from game_impl import GameImpl
+from game_map import GameMap
 from map import Map
 from player import Player
 from position import Position
@@ -18,19 +19,20 @@ class Game:
             raise Exception('players_count is not int or <= 0')
         if players_positions is not None and not isinstance(players_positions, type([Position])):
             raise Exception('players_positions is not [Point]')
-        self.map = maps[0]
-        self.maps = maps  # not implemented
+        self.game_map = GameMap(maps[0])
+        self.game_maps = [GameMap(maps[i]) for i in range(len(maps))]   # not implemented
         self.players = []
         for i in range(players_count):
+            self.players.append(Player(i))
             if players_positions is not None and i < len(players_positions):
-                if not maps[0].has_route_from(players_positions[i]):
+                if not self.game_map.has_route_from(players_positions[i]):
                     raise Exception('Player ' + str(i) + 'has not route to the exit')
-                self.players.append(Player(maps[0], players_positions[i], i))
+                self.game_map.add_player_at(self.players[-1], players_positions[i])
             else:
                 random_position = self.random_position_on_map(maps[0])
-                while not maps[0].has_route_from(random_position):
+                while not self.game_map.has_route_from(random_position):
                     random_position = self.random_position_on_map(maps[0])
-                self.players.append(Player(maps[0], random_position, i))
+                self.game_map.add_player_at(self.players[-1], random_position)
         self.game_is_over = False
         self.current_player_id = 0
         self.current_player = self.players[self.current_player_id]
@@ -43,30 +45,38 @@ class Game:
                 print('Player ' + str(self.current_player_id) + ' are stunned for ', end='')
                 print('1 step' if stun == 1 else (str(stun) + ' steps'))
                 self.current_player.stun -= 1
-                continue
-            print('Player ' + str(self.current_player_id) + ' step', end='')
-            while True:
-                print(' > ', end='')
-                key = input()[0:1].lower()
-                if direction_by_key(key) in Direction:
-                    self.game_impl.move_to(self, direction_by_key(key))
-                elif key == 'i':
-                    self.game_impl.inventory(self)
-                    continue
-                elif key == 'x':
-                    if not self.game_impl.shot_a_bullet(self):
+            else:
+                print('Player ' + str(self.current_player.id) + ' step', end='')
+                while True:
+                    print(' > ', end='')
+                    in_command = input().upper()
+                    key = in_command[0:1]
+                    if direction_by_key(key) in Direction:
+                        self.game_impl.move_to(self, direction_by_key(key))
+                    elif key == 'E':
+                        self.game_impl.inventory(self)
                         continue
-                elif key == '?':
-                    self.game_impl.help(self)
-                    continue
-                else:
-                    continue
-                break
-            self.current_player_id += 1
-            self.current_player_id %= len(self.players)
-            self.current_player = self.players[self.current_player_id]
+                    elif key == 'X':
+                        if len(in_command.split(' ')) > 1:
+                            key = in_command.split(' ')[1][0:1]
+                        while not direction_by_key(key) in Direction and key != 'Q':
+                            print('shoot direction > ', end='')
+                            key = input()[0:1].upper()
+                        if key == 'Q' or not self.game_impl.shoot(self, direction_by_key(key)):
+                            continue
+                    elif key == '?':
+                        self.game_impl.help(self)
+                        continue
+                    else:
+                        continue
+                    break
+            try:
+                self.current_player = next(self.current_player_it)
+            except StopIteration:
+                self.current_player_it = iter(self.players)
+                self.current_player = next(self.current_player_it)
 
     def start_game(self):
         if self.game_is_over:
-            self.__init__(self.players[0].map, len(self.players))
+            self.__init__(self.game_maps, len(self.players))
         self.wait_for_action()
