@@ -26,7 +26,7 @@ class Game:
             self.players.append(Player(i))
             if players_positions is not None and i < len(players_positions):
                 if not self.game_map.has_route_from(players_positions[i]):
-                    raise Exception('Player ' + str(i) + 'has not route to the exit')
+                    raise Exception('Player ' + str(i) + ' can not reach the exit')
                 self.game_map.add_player_at(self.players[-1], players_positions[i])
             else:
                 random_position = self.random_position_on_map(maps[0])
@@ -34,16 +34,13 @@ class Game:
                     random_position = self.random_position_on_map(maps[0])
                 self.game_map.add_player_at(self.players[-1], random_position)
         self.game_is_over = False
-        self.current_player_id = 0
-        self.current_player = self.players[self.current_player_id]
+        self.current_player_it = iter(self.players)
+        self.current_player = next(self.current_player_it)
         self.game_impl = GameImpl()
 
     def wait_for_action(self):
         while not self.game_is_over:
-            if self.current_player.stun > 0:
-                stun = self.current_player.stun
-                print('Player ' + str(self.current_player_id) + ' are stunned for ', end='')
-                print('1 step' if stun == 1 else (str(stun) + ' steps'))
+            if self.game_impl.player_is_stunned(self):
                 self.current_player.stun -= 1
             else:
                 print('Player ' + str(self.current_player.id) + ' step', end='')

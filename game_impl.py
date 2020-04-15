@@ -14,12 +14,20 @@ class GameImpl:
         game.current_player.inventory.update_bullets()
         print('Your bullets were updated. Now you have: ' + str(game.current_player.inventory.bullets))
 
-    def kill_player(self, game, id):
-        print('Player ' + str(game.current_player_id) + ' kills Player ' + str(id) + '!')
+    def kill_player(self, game, killed_player):
+        print('Player ' + str(game.current_player.id) + ' kills Player ' + str(killed_player.id) + '!')
 
     def stun_for(self, game, duration):
         game.current_player.stun = duration
-        print('You are stunned for ' + str(game.current_player.stun) + ' steps')
+        print('You are stunned by ' + str(game.current_player.stun) + ' steps')
+
+    def player_is_stunned(self, game):
+        if game.current_player.stun == 0:
+            return False
+        stun = game.current_player.stun
+        print('Player ' + str(game.current_player.id) + ' is still stunned by ', end='')
+        print('1 step' if stun == 1 else (str(stun) + ' steps'))
+        return True
 
     def teleport_to(self, game, destination):
         print('You have been teleported')
@@ -27,7 +35,37 @@ class GameImpl:
 
     def gave_over(self, game):
         game.game_is_over = True
-        print('Game is over! Player ' + str(game.current_player_id) + ' wins!')
+        print('Game is over! Player ' + str(game.current_player.id) + ' wins!')
+
+    def inventory(self, game):
+        print('Inventory:')
+        print('\tBullets: ' + str(game.current_player.inventory.bullets))
+
+    def shoot(self, game, direction: Direction):
+        if game.current_player.inventory.bullets == 0:
+            print('You are out of bullets')
+            return False
+        print('Not implemented')
+        return True
+
+    def help(self, game):
+        print('''Walk keys:
+    W — Up
+    A — Left
+    S — Down
+    D — Right
+    
+Actions:
+    X <W, A, S, D> - Shoot (type Q to break shooting) 
+
+Other:
+    I - Inventory
+    ? - Help
+
+After any action except 'Other' you make a step.
+
+For more information read this —— https://github.com/NaylRush/MazeGame
+@NaylRush''')
 
     def move_to(self, game, direction: Direction):
         current_cell = game.game_map.player_cell(game.current_player)
@@ -53,35 +91,3 @@ class GameImpl:
             elif isinstance(current_cell, Teleport):
                 self.teleport_to(game, current_cell.destination)
                 return
-
-    def inventory(self, game):
-        print('Inventory:')
-        print('\tBullets: ' + str(game.current_player.inventory.bullets))
-
-    def shot_a_bullet(self, game):
-        if game.current_player.inventory.bullets == 0:
-            print('You run out of bullets')
-            return False
-        print('Not implemented')
-        return True
-
-    def help(self, game):
-        print('''
-Walk keys:
-    W — Up
-    A — Left
-    S — Down
-    D — Right
-    
-Actions:
-    X - Shot a bullet
-
-Other:
-    I - Inventory
-    ? - Help
-
-After any action except 'Other' you make a step.
-
-For more information read this —— https://github.com/NaylRush/MazeGame
-@NaylRush
-        ''')
