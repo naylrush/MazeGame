@@ -23,7 +23,7 @@ class Player:
             self.id = total_ids
             total_ids += 1
         else:
-            if not isinstance(id, int):
+            if type(id) is not int:
                 raise Exception('id is not int')
             self.id = id
         self.inventory = Inventory()

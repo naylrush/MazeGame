@@ -8,13 +8,16 @@ class Position:
         self.x = x
         self.y = y
 
-    def __add__(self, point):
-        self.x += point.x
-        self.y += point.y
+    def __add__(self, other):
+        self.x += other.x
+        self.y += other.y
 
     def __isub__(self):
         self.x = -self.x
         self.y = -self.y
+
+    def __eq__(self, other):
+        return (self.x, self.y) == (other.x, other.y)
 
     def __str__(self):
         return str((self.x, self.y))

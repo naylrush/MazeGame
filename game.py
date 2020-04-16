@@ -15,12 +15,12 @@ class Game:
     def __init__(self,  maps=None, players_count=0, players_positions=None):
         if maps is None or not isinstance(maps, type([Map])) or len(maps) == 0:
             raise Exception('maps are not given or they are not [Map]')
-        if players_count <= 0 or not isinstance(players_count, int):
+        if players_count <= 0 or type(players_count) is not int:
             raise Exception('players_count is not int or <= 0')
         if players_positions is not None and not isinstance(players_positions, type([Position])):
             raise Exception('players_positions is not [Point]')
         self.game_map = GameMap(maps[0])
-        self.game_maps = [GameMap(maps[i]) for i in range(len(maps))]   # not implemented
+        self.game_maps = [GameMap(maps[i]) for i in range(1, len(maps))]   # not implemented
         self.players = []
         for i in range(players_count):
             self.players.append(Player(i))

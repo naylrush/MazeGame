@@ -1,7 +1,8 @@
 
 from cell import *
-from direction import *
 from copy import deepcopy
+from direction import *
+from position import Position
 
 
 def write_map(map, path=''):
@@ -17,7 +18,7 @@ def write_map(map, path=''):
     # generate symbol map
     for i in range(map.x_size * 2 - 1):
         for j in range(map.y_size * 2 - 1):
-            cell = map[i // 2][j // 2]
+            cell = map[Position(i // 2, j // 2)]
             if i & 1 == 0:
                 if j & 1 == 0:
                     sym_map[i].append(cell.to_symbol())

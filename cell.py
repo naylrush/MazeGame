@@ -1,19 +1,6 @@
 
 from direction import Direction
-from enum import Enum
 from position import Position
-
-
-class CellSymbol(Enum):
-    Empty = '.'
-    Stun = 'S'
-    RubberRoom = '_'  # computing
-    Teleport = 'T'
-    Armory = 'A'
-    Exit = 'E'
-
-
-cell_symbols = {cell.name: cell.value for cell in CellSymbol}
 
 
 class Cell:
@@ -32,12 +19,15 @@ class Cell:
         return self.borders[direction]
 
     def to_symbol(self):
-        return cell_symbols[self.name]
+        return self.name[0]
 
 
 class Empty(Cell):
     def __init__(self):
         super().__init__()
+
+    def to_symbol(self):
+        return '.'
 
 
 class Stun(Cell):
@@ -58,9 +48,9 @@ class RubberRoom(Cell):
 
 
 class Teleport(Cell):
-    def __init__(self, destination: Position):
+    def __init__(self, dest: tuple):
         super().__init__()
-        self.destination = Cell(destination)
+        self.destination = Position(dest[0], dest[1])
 
 
 class Armory(Cell):

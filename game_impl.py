@@ -1,6 +1,5 @@
 
 from cell import *
-from game_map import GameMap
 
 
 class GameImpl:
@@ -59,7 +58,7 @@ Actions:
     X <W, A, S, D> - Shoot (type Q to break shooting) 
 
 Other:
-    I - Inventory
+    E - Inventory
     ? - Help
 
 After any action except 'Other' you make a step.
@@ -70,10 +69,10 @@ For more information read this —— https://github.com/NaylRush/MazeGame
     def move_to(self, game, direction: Direction):
         current_cell = game.game_map.player_cell(game.current_player)
         # before step
-        if isinstance(current_cell, RubberRoom) and direction != current_cell.direction:
+        if type(current_cell) is RubberRoom and direction != current_cell.direction:
             self.successful(game)
             return
-        elif isinstance(current_cell, Exit) and direction == current_cell.direction:
+        elif type(current_cell) is Exit and direction == current_cell.direction:
             self.gave_over(game)
             return
         # step
@@ -82,12 +81,13 @@ For more information read this —— https://github.com/NaylRush/MazeGame
         else:
             self.successful(game)
             current_cell = game.game_map.player_cell(game.current_player)
-            if isinstance(current_cell, Armory):
+            if type(current_cell) is Armory:
                 self.update_bullets(game)
                 return
-            elif isinstance(current_cell, Stun):
+            elif type(current_cell) is Stun:
                 self.stun_for(game, current_cell.duration)
                 return
-            elif isinstance(current_cell, Teleport):
-                self.teleport_to(game, current_cell.destination)
+            elif type(current_cell) is Teleport:
+                while type(game.game_map.player_cell(game.current_player)) is Teleport:
+                    self.teleport_to(game, current_cell.destination)
                 return

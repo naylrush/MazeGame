@@ -1,8 +1,6 @@
 
 from enum import Enum
 
-direction_symbols = {'UP': '_', 'LEFT': '|', 'DOWN': '_', 'RIGHT': '|'}
-
 
 class Direction(Enum):
     UP = 0
@@ -14,7 +12,7 @@ class Direction(Enum):
         return self.name[0]
 
     def to_symbol(self):
-        return direction_symbols[self.name]
+        return '_' if self.value % 2 == 0 else '|'
 
 
 UP = Direction.UP
@@ -24,7 +22,6 @@ RIGHT = Direction.RIGHT
 
 
 def direction_by_key(key: str):
-    direction_by_key_dict = {'w': UP, 'a': LEFT, 's': DOWN, 'd': RIGHT}
-    if key in direction_by_key_dict:
-        return direction_by_key_dict[key]
-    return None
+    key.upper()
+    direction_by_key_dict = {'W': UP, 'A': LEFT, 'S': DOWN, 'D': RIGHT}
+    return direction_by_key_dict.get(key)

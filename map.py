@@ -8,16 +8,13 @@ class Map:
     def __init__(self, map=None):
         if map is None:
             map = [[]]
-        if not isinstance(map, type([[]])):
+        elif not isinstance(map, type([[]])):
             raise Exception('map is not a two-dimension array')
         self.map = map
         self.x_size = len(map)
         self.y_size = len(map[0])
 
-    def __getitem__(self, i):
-        return self.map[i]
-
-    def get(self, position: Position):
+    def __getitem__(self, position: Position):
         return self.map[position.x][position.y]
 
     def is_out_of_map(self, position: Position):
