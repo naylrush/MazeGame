@@ -20,18 +20,15 @@ class Game:
         if players_positions is not None and not isinstance(players_positions, type([Position])):
             raise Exception('players_positions is not [Point]')
         self.game_map = GameMap(maps[0])
+        self.game_map.check_map()
         self.game_maps = [GameMap(maps[i]) for i in range(1, len(maps))]   # not implemented
         self.players = []
         for i in range(players_count):
             self.players.append(Player(i))
             if players_positions is not None and i < len(players_positions):
-                if not self.game_map.has_route_from(players_positions[i]):
-                    raise Exception('Player ' + str(i) + ' can not reach the exit')
                 self.game_map.add_player_at(self.players[-1], players_positions[i])
             else:
                 random_position = self.random_position_on_map(maps[0])
-                while not self.game_map.has_route_from(random_position):
-                    random_position = self.random_position_on_map(maps[0])
                 self.game_map.add_player_at(self.players[-1], random_position)
         self.game_is_over = False
         self.current_player_it = iter(self.players)

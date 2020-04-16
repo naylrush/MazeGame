@@ -1,5 +1,6 @@
 
 from cell import RubberRoom
+from game_map_checker import check_map
 from position import Position
 
 
@@ -8,14 +9,17 @@ class GameMap:
         self.map = map
         self.x_size = self.map.x_size
         self.y_size = self.map.y_size
-        self.player_by_position = [[set() for _ in range(self.y_size)] for _ in range(self.x_size)]
+        self.players_at_position = [[set() for _ in range(self.y_size)] for _ in range(self.x_size)]
         self.position_by_player = {}
 
     def __getitem__(self, position: Position):
         return self.map[position]
 
+    def reset(self):
+        self.__init__(self.map)
+
     def players_at(self, position: Position):
-        return self.player_by_position[position.x][position.y]
+        return self.players_at_position[position.x][position.y]
 
     def player_position(self, player):
         return self.position_by_player[player]
@@ -24,7 +28,7 @@ class GameMap:
         return self.__getitem__(self.position_by_player[player])
 
     def add_player_at(self, player, position: Position):
-        self.player_by_position[position.x][position.y].add(player)
+        self.players_at_position[position.x][position.y].add(player)
         self.position_by_player[player] = position
 
     def remove_player(self, player):
@@ -36,18 +40,21 @@ class GameMap:
         player_position = self.position_by_player[player]
         self.players_at_position[player_position.x][player_position.y].remove(player)
         self.position_by_player[player] = new_position
-        self.player_by_position[new_position.x][new_position.y].add(player)
+        self.players_at_position[new_position.x][new_position.y].add(player)
 
     def player_go_to(self, player, direction):
         self.player_move_to(player, self.position_by_player[player].copy_shift_to(direction))
 
-    def player_can_go_to(self, player, direction):
-        player_position = self.position_by_player[player]
-        if self.map[player_position].has_border_at(direction) or\
-            self.map.is_out_of_map(player_position.copy_shift_to(direction)) or\
-                (type(self.player_cell(player)) is RubberRoom and self.player_cell(player).direction != direction):
+    def player_can_go_from_to(self, position, direction):
+        if self.map[position].has_border_at(direction) or\
+                self.map.is_out_of_map(position.copy_shift_to(direction)) or\
+                (type(self.map[position]) is RubberRoom and self.map[position].direction != direction):
             return False
         return True
+
+    def player_can_go_to(self, player, direction):
+        player_position = self.position_by_player[player]
+        return self.player_can_go_from_to(player_position, direction)
 
     def player_try_go_to(self, player, direction):
         if self.player_can_go_to(player, direction):
@@ -56,5 +63,7 @@ class GameMap:
         else:
             return False
 
-    def has_route_from(self, start: Position):
-        return game_map_has_route_from(start, self)
+    def check_map(self):
+        position = check_map(self)
+        if position is not None:
+            raise LookupError(position)

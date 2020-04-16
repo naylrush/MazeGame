@@ -14,6 +14,9 @@ class Direction(Enum):
     def to_symbol(self):
         return '_' if self.value % 2 == 0 else '|'
 
+    def opposite(self):
+        return Direction((self.value + 2) % 4)
+
 
 UP = Direction.UP
 LEFT = Direction.LEFT
