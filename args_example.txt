@@ -1,0 +1,9 @@
+Check:
+check --map map1.txt
+check --map map1.txt map2.txt
+
+Game:
+game --map map1.txt
+game --map map1.txt --players 2
+game --map map1.txt --players 2 --start_positions (0,0)
+game --map map1.txt --players 2 --start_positions (0,0) (0,2)
