@@ -1,0 +1,11 @@
+3 3
+.|S E
+. . _
+S . L
+. . .
+A R .
+E Exit(UP)
+S Stun(2)
+A Armory()
+R RubberRoom(RIGHT)
+L RubberRoom(LEFT)
