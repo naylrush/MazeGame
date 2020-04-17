@@ -46,5 +46,12 @@ def read_map(path: str):
                     map[column][line].add_border_at(DOWN)
                     map[column + 1][line].add_border_at(UP)
                 line += 1
+
+        # add teleport points
+        for x in range(x_size):
+            for y in range(y_size):
+                if type(map[x][y]) is Teleport:
+                    destination = map[x][y].destination
+                    map[destination.x][destination.y].teleport_dest_from.append(Position(x, y))
     file.close()
     return map

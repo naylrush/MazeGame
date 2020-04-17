@@ -6,6 +6,12 @@ from position import Position
 from collections import deque
 
 
+def add_player(game_map, queue, position):
+    new_player = Player()
+    game_map.add_player_at(new_player, position)
+    queue.appendleft(new_player)
+
+
 def check_map(game_map):
     visited = [[False for _ in range(game_map.y_size)] for _ in range(game_map.x_size)]
     player = Player()
@@ -28,9 +34,7 @@ def check_map(game_map):
                 if game_map.player_can_go_to(current_player, direction):
                     new_position = current_player_position.copy_shift_to(direction)
                     if not visited[new_position.x][new_position.y]:
-                        new_player = Player()
-                        game_map.add_player_at(new_player, new_position)
-                        queue.appendleft(new_player)
+                        add_player(game_map, queue, new_position)
 
     if exit_position is None:
         return Position(0, 0)
@@ -44,12 +48,17 @@ def check_map(game_map):
     queue.appendleft(player)
     while len(queue) > 0:
         current_player = queue.popleft()
+        for teleport_point in game_map.player_cell(current_player).teleport_dest_from:
+            if not visited[teleport_point.x][teleport_point.y]:
+                visited[teleport_point.x][teleport_point.y] = True
+                add_player(game_map, queue, teleport_point)
         for direction in Direction:
             if not game_map.player_cell(current_player).has_border_at(direction):
                 new_position = game_map.player_position(current_player).copy_shift_to(direction)
                 if not game_map.map.is_out_of_map(new_position) and not visited[new_position.x][new_position.y]:
                     if game_map.player_can_go_from_to(new_position, direction.opposite()):
                         visited[new_position.x][new_position.y] = True
+                        add_player(game_map, queue, new_position)
                         new_player = Player()
                         game_map.add_player_at(new_player, new_position)
                         queue.appendleft(new_player)

@@ -8,6 +8,7 @@ class Cell:
         self.name = type(self).__name__
         self.position = position
         self.borders = {direction: False for direction in Direction}
+        self.teleport_dest_from = []
 
     def locate_at(self, position):
         self.position = position
