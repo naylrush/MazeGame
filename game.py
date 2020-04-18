@@ -24,7 +24,7 @@ class Game:
         self.game_maps = [GameMap(maps[i]) for i in range(1, len(maps))]   # not implemented
         self.players = []
         for i in range(players_count):
-            self.players.append(Player(i))
+            self.players.append(Player())
             if players_positions is not None and i < len(players_positions):
                 self.game_map.add_player_at(self.players[-1], players_positions[i])
             else:

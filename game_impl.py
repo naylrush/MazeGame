@@ -30,7 +30,7 @@ class GameImpl:
 
     def teleport_to(self, game, destination):
         print('You have been teleported')
-        game.game_map.player_move_to(destination)
+        game.game_map.player_move_to(game.current_player, destination)
 
     def gave_over(self, game):
         game.game_is_over = True

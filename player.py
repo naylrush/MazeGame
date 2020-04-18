@@ -7,6 +7,9 @@ class Inventory:
     def update_bullets(self):
         self.bullets = self.max_bullets
 
+    def reset(self):
+        self.__init__()
+
 
 total_ids = 0
 
@@ -17,14 +20,9 @@ def reset_player_total_ids():
 
 
 class Player:
-    def __init__(self, id=None):
-        if id is None:
-            global total_ids
-            self.id = total_ids
-            total_ids += 1
-        else:
-            if type(id) is not int:
-                raise Exception('id is not int')
-            self.id = id
+    def __init__(self):
+        global total_ids
+        self.id = total_ids
+        total_ids += 1
         self.inventory = Inventory()
         self.stun = 0
