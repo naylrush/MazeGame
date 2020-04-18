@@ -1,5 +1,6 @@
 
 from cell import *
+from copy import deepcopy
 
 
 class GameImpl:
@@ -14,7 +15,11 @@ class GameImpl:
         print('Your bullets were updated. Now you have: ' + str(game.current_player.inventory.bullets))
 
     def kill_player(self, game, killed_player):
+        killed_player.stun = 1
+        killed_player.inventory.reset()
+        game.game_map.player_move_to(killed_player, killed_player.start_position)
         print('Player ' + str(game.current_player.id) + ' kills Player ' + str(killed_player.id) + '!')
+        print('Player ' + str(killed_player.id) + ' has been teleported to his start position')
 
     def stun_for(self, game, duration):
         game.current_player.stun = duration
@@ -44,8 +49,18 @@ class GameImpl:
         if game.current_player.inventory.bullets == 0:
             print('You are out of bullets')
             return False
-        print('Not implemented')
-        return True
+        current_position = deepcopy(game.game_map.player_position(game.current_player))
+        current_position.shift_to(direction)
+        while not game.game_map.map.is_out_of_map(current_position):
+            players = game.game_map.players_at(current_position)
+            if len(players) != 0:
+                killed_player = players.pop()
+                players.add(killed_player)
+                self.kill_player(game, killed_player)
+                return True
+            current_position.shift_to(direction)
+        print('Your shot did not hit anyone')
+        return False
 
     def help(self, game):
         print('''Walk keys:

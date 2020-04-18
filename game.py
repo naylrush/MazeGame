@@ -26,9 +26,11 @@ class Game:
         for i in range(players_count):
             self.players.append(Player())
             if players_positions is not None and i < len(players_positions):
+                self.players[-1].start_position = players_positions[i]
                 self.game_map.add_player_at(self.players[-1], players_positions[i])
             else:
                 random_position = self.random_position_on_map(maps[0])
+                self.players[-1].start_position = random_position
                 self.game_map.add_player_at(self.players[-1], random_position)
         self.game_is_over = False
         self.current_player_it = iter(self.players)

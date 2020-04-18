@@ -1,4 +1,7 @@
 
+from position import Position
+
+
 class Inventory:
     def __init__(self, bullets=0):
         self.bullets = bullets
@@ -20,9 +23,10 @@ def reset_player_total_ids():
 
 
 class Player:
-    def __init__(self):
+    def __init__(self, start_position=Position()):
         global total_ids
         self.id = total_ids
         total_ids += 1
         self.inventory = Inventory()
         self.stun = 0
+        self.start_position = start_position
