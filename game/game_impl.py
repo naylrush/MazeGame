@@ -45,6 +45,9 @@ class GameImpl:
         print('1 step' if stun == 1 else (str(stun) + ' steps'))
         return True
 
+    def leave_rubber_roome(self, game):
+        print('You leaved rubber room')
+
     def teleport_to(self, game, destination):
         print('You have been teleported')
         game.game_map.player_move_to(game.current_player, destination)
@@ -60,18 +63,24 @@ class GameImpl:
         if game.current_player.inventory.bullets == 0:
             print('You are out of bullets')
             return False
+        game.current_player.inventory.bullets -= 1
         current_position = deepcopy(game.game_map.player_position(game.current_player))
-        current_position.shift_to(direction)
         while not game.game_map.map.is_out_of_map(current_position):
             players = game.game_map.players_at(current_position)
-            if len(players) != 0:
+            if len(players) != 0 and not (len(players) == 1 and game.current_player in players):
+                if len(players) == 1 and game.current_player in players:
+                    current_position.shift_to(direction)
+                    break
                 killed_player = players.pop()
+                if killed_player == game.current_player:
+                    killed_player = players.pop()
+                    players.add(game.current_player)
                 players.add(killed_player)
                 self.kill_player(game, killed_player)
                 return True
             current_position.shift_to(direction)
         print('Your shot did not hit anyone')
-        return False
+        return True
 
     def take_inventory(self, game, cell):
         print('You have got someone\'s inventory!')
@@ -87,9 +96,9 @@ class GameImpl:
     A — Left
     S — Down
     D — Right
-    
+
 Actions:
-    X <W, A, S, D> - Shoot (type Q to break shooting) 
+    X <W, A, S, D> - Shoot (type Q to break shooting)
 
 Other:
     E - Inventory
@@ -119,9 +128,12 @@ For more information read this —— https://github.com/NaylRush/MazeGame
     def move_to(self, game, direction: Direction):
         current_cell = game.game_map.player_cell(game.current_player)
         # before step
-        if type(current_cell) is RubberRoom and direction != current_cell.direction:
-            self.successful(game)
-            return
+        if type(current_cell) is RubberRoom:
+            if direction != current_cell.direction:
+                self.successful(game)
+                return
+            else:
+                self.leave_rubber_roome(game)
         elif type(current_cell) is Exit and direction == current_cell.direction:
             if game.current_player.inventory.has_key:
                 self.gave_over(game)
