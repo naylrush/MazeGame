@@ -50,7 +50,7 @@ class Game:
                     if direction_by_key(key) in Direction:
                         self.game_impl.move_to(self, direction_by_key(key))
                     elif key == 'E':
-                        self.game_impl.inventory(self)
+                        self.game_impl.whats_in_inventory(self)
                         continue
                     elif key == 'X':
                         if len(in_command.split(' ')) > 1:

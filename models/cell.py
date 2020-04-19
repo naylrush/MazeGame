@@ -1,5 +1,6 @@
 
 from models.direction import Direction
+from models.inventory import Inventory
 from models.position import Position
 
 
@@ -9,6 +10,7 @@ class Cell:
         self.position = position
         self.borders = {direction: False for direction in Direction}
         self.teleport_dest_from = []
+        self.inventory = None
 
     def locate_at(self, position):
         self.position = position

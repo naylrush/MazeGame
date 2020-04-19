@@ -14,9 +14,20 @@ def read_map(path: str):
         x_size, y_size = lines[0].split(' ')
         x_size, y_size = int(x_size), int(y_size)
 
+        # read key
+        game_with_key = False
+        phrase = 'Key at '
+        if lines[x_size * 2][:len(phrase)] == phrase:
+            game_with_key = True
+            position = lines[x_size * 2][len(phrase):]
+            x, y = position[1:len(position) - 2].split(',')
+            key_position = Position(int(x), int(y))
+            if key_position.x >= x_size or key_position.y >= y_size:
+                raise Exception('Key is unreachable')
+
         # read cell symbols
         symbol_by_cell = {Empty().to_symbol(): Empty()}
-        for i in range(x_size * 2, len(lines)):
+        for i in range(x_size * 2 + (1 if game_with_key else 0), len(lines)):
             cell_type, command = lines[i][:1], lines[i][2:]
             symbol_by_cell[cell_type] = eval(command)
 
@@ -53,5 +64,10 @@ def read_map(path: str):
                 if type(map[x][y]) is Teleport:
                     destination = map[x][y].destination
                     map[destination.x][destination.y].teleport_dest_from.append(Position(x, y))
+
+        # add key
+        if game_with_key:
+            map[key_position.x][key_position.y].inventory = Inventory(True)
+
     file.close()
     return map

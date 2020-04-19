@@ -10,12 +10,24 @@ class GameImpl:
     def unsuccessful(self, game):
         print('You bumped into a wall')
 
+    def whats_in_inventory(self, game):
+        print('Inventory:')
+        if game.current_player.inventory.empty():
+            print('\tNothing')
+        else:
+            if game.current_player.inventory.bullets > 0:
+                print('\tBullets: ' + str(game.current_player.inventory.bullets))
+            if game.current_player.inventory.has_key:
+                print('\tKey')
+
     def update_bullets(self, game):
         game.current_player.inventory.update_bullets()
-        print('Your bullets were updated. Now you have: ' + str(game.current_player.inventory.bullets))
+        print('You have got bullets!')
+        self.whats_in_inventory(game)
 
     def kill_player(self, game, killed_player):
         killed_player.stun = 1
+        game.game_map.player_position(killed_player).inventory = deepcopy(killed_player.inventory)
         killed_player.inventory.reset()
         game.game_map.player_move_to(killed_player, killed_player.start_position)
         print('Player ' + str(game.current_player.id) + ' kills Player ' + str(killed_player.id) + '!')
@@ -41,9 +53,8 @@ class GameImpl:
         game.game_is_over = True
         print('Game is over! Player ' + str(game.current_player.id) + ' wins!')
 
-    def inventory(self, game):
-        print('Inventory:')
-        print('\tBullets: ' + str(game.current_player.inventory.bullets))
+    def key_required(self, game):
+        print('You need a key to get out!')
 
     def shoot(self, game, direction: Direction):
         if game.current_player.inventory.bullets == 0:
@@ -61,6 +72,14 @@ class GameImpl:
             current_position.shift_to(direction)
         print('Your shot did not hit anyone')
         return False
+
+    def take_inventory(self, game, cell):
+        print('You have got someone\'s inventory!')
+        if cell.inventory.has_key:
+            print('You have got a key!')
+        game.current_player.inventory.append(cell.inventory)
+        cell.inventory = None
+        self.whats_in_inventory(game)
 
     def help(self, game):
         print('''Walk keys:
@@ -83,6 +102,8 @@ For more information read this —— https://github.com/NaylRush/MazeGame
 
     def check_position(self, game):
         current_cell = game.game_map.player_cell(game.current_player)
+        if current_cell.inventory is not None:
+            self.take_inventory(game, current_cell)
         if type(current_cell) is Armory:
             self.update_bullets(game)
             return
@@ -102,7 +123,10 @@ For more information read this —— https://github.com/NaylRush/MazeGame
             self.successful(game)
             return
         elif type(current_cell) is Exit and direction == current_cell.direction:
-            self.gave_over(game)
+            if game.current_player.inventory.has_key:
+                self.gave_over(game)
+            else:
+                self.key_required(game)
             return
         # step
         if not game.game_map.player_try_go_to(game.current_player, direction):
