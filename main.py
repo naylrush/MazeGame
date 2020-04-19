@@ -27,6 +27,13 @@ def play_game(args):
         for position in args.positions:
             x, y = position[1:len(position) - 1].split(',')
             positions.append(Position(int(x), int(y)))
+    if not args.random_positions:
+        if args.players - len(positions) > 0:
+            print('Map size:', map.x_size, map.y_size)
+            for i in range(len(positions), args.players):
+                position = input('Start position for Player ' + str(i) + ': ')
+                x, y = position[1:len(position) - 1].split(',')
+                positions.append(Position(int(x), int(y)))
     game = Game([map], args.players, positions)
     game.start_game()
 
@@ -44,6 +51,7 @@ if __name__ == "__main__":
     check_parser.add_argument('--map', type=str, action='store', dest='map_path')
     check_parser.add_argument('--players', type=int, action='store', dest='players', default=1)
     check_parser.add_argument('--start_positions', type=str, nargs='+', action='store', dest='positions', default=None)
+    check_parser.add_argument('--random_positions', action='store_true', dest='random_positions', default=False)
     check_parser.set_defaults(func=play_game)
 
     args = parser.parse_args()
