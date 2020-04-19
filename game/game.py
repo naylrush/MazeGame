@@ -8,10 +8,11 @@ from models.position import Position
 from random import randint
 
 
-class Game:
-    def random_position_on_map(self, map: Map):
-        return Position(randint(0, map.x_size - 1), randint(0, map.y_size - 1))
+def random_position_on_map(map: Map):
+    return Position(randint(0, map.x_size - 1), randint(0, map.y_size - 1))
 
+
+class Game:
     def __init__(self,  maps=None, players_count=0, players_positions=None):
         if maps is None or not isinstance(maps, type([Map])) or len(maps) == 0:
             raise Exception('maps are not given or they are not [Map]')
@@ -75,6 +76,4 @@ class Game:
     def start_game(self):
         if self.game_is_over:
             self.__init__(self.game_maps, len(self.players))
-        for self.current_player in self.players:
-            self.game_impl.check_position(self)
-            self.wait_for_action()
+        self.wait_for_action()

@@ -46,7 +46,7 @@ class GameImpl:
         return True
 
     def leave_rubber_roome(self, game):
-        print('You leaved rubber room')
+        print('You leaved a rubber room')
 
     def teleport_to(self, game, destination):
         print('You have been teleported')
@@ -122,7 +122,6 @@ For more information read this —— https://github.com/NaylRush/MazeGame
         elif type(current_cell) is Teleport:
             if type(game.game_map.player_cell(game.current_player)) is Teleport:
                 self.teleport_to(game, current_cell.destination)
-                self.check_position(game)
             return
 
     def move_to(self, game, direction: Direction):

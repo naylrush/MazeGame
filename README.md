@@ -30,10 +30,11 @@
 2. **game** — сама игра.
 
 В режиме игры запускается игра в интерактивном режиме, то есть игроки будут вводить команды в консоли,
-а им туда же будут выводиться ответы "ведущего". В качестве аргумента программа принимает файл с полем — обязательный аргумент,
-число игроков и стартовые позиции — опциональные аргументы. Если они не указано число игроков, то игра запустится в одиночном режиме.
-Если не указаны стартовые позиции или их недостаточно, то игра запрашивает их в начале игры, сообщив размер поля,
-или выбирается рандомно, если установлен флаг ```random_positions```. Когда стартовые позиции заданы, игроки начинают по очереди ходить.
+а им туда же будут выводиться ответы "ведущего". В качестве аргумента программа принимает файл с полем и количество игроков —
+обязательные аргументы, стартовые позиции — опциональный аргумент. Если не указаны стартовые позиции или их недостаточно,
+игра запрашивает их в начале игры, сообщив размер поля, или они выбираются рандомно, если установлен флаг ```random_positions```.
+В интерактивном режиме добавления стартовых позиций можно выбрать позицию рандом, написав "random".
+Когда стартовые позиции заданы окончательно, игра начинается, и игроки начинают по очереди ходить.
 
 **В свой ход игрок может ввести такие команды:**
 - **W/A/S/D** — сходить вверх, влева, вниз, вправо.
@@ -51,16 +52,15 @@
 ```
 check --map <map_paths/names>
 =====
-game --map <map_path> --players <players_count> --start_positions <positions as tuple> --random_positions
+game --map <map_path/name> --players <players_count> --start_positions <positions as (x, y)> --random_positions
 ```
-*```--players```, ```--start_positions``` and ```--random_positions``` are optional arguments.*
+*```--start_positions``` and ```--random_positions``` are optional arguments.*
 
 **Примеры команд:**
 ```
 check --map map.txt
 check --map map1.txt map2.txt  <-- you can ckeck multiple maps in a single query
 =====
-game --map map.txt --start_positions (0,0) <-- starts singleplayer game
 game --map map.txt --random_positions <-- starts singleplayer game at a ramdom positions
 game --map map.txt --players 2  <-- start positions will be asked before the game starts
 game --map map.txt --players 2 --random_positions <-- start positions will be chosen randomly
