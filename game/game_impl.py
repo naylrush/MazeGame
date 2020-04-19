@@ -81,6 +81,20 @@ After any action except 'Other' you make a step.
 For more information read this —— https://github.com/NaylRush/MazeGame
 @NaylRush''')
 
+    def check_position(self, game):
+        current_cell = game.game_map.player_cell(game.current_player)
+        if type(current_cell) is Armory:
+            self.update_bullets(game)
+            return
+        elif type(current_cell) is Stun:
+            self.stun_for(game, current_cell.duration)
+            return
+        elif type(current_cell) is Teleport:
+            if type(game.game_map.player_cell(game.current_player)) is Teleport:
+                self.teleport_to(game, current_cell.destination)
+                self.check_position(game)
+            return
+
     def move_to(self, game, direction: Direction):
         current_cell = game.game_map.player_cell(game.current_player)
         # before step
@@ -95,14 +109,4 @@ For more information read this —— https://github.com/NaylRush/MazeGame
             self.unsuccessful(game)
         else:
             self.successful(game)
-            current_cell = game.game_map.player_cell(game.current_player)
-            if type(current_cell) is Armory:
-                self.update_bullets(game)
-                return
-            elif type(current_cell) is Stun:
-                self.stun_for(game, current_cell.duration)
-                return
-            elif type(current_cell) is Teleport:
-                while type(game.game_map.player_cell(game.current_player)) is Teleport:
-                    self.teleport_to(game, current_cell.destination)
-                return
+            self.check_position(game)

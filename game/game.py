@@ -75,4 +75,6 @@ class Game:
     def start_game(self):
         if self.game_is_over:
             self.__init__(self.game_maps, len(self.players))
-        self.wait_for_action()
+        for self.current_player in self.players:
+            self.game_impl.check_position(self)
+            self.wait_for_action()
