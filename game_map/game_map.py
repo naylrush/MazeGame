@@ -1,7 +1,7 @@
 
-from cell import RubberRoom
-from game_map_checker import check_map
-from position import Position
+from game_map.game_map_checker import check_map
+from models.cell import RubberRoom
+from models.position import Position
 
 
 class GameMap:

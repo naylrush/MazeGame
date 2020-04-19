@@ -1,10 +1,10 @@
 
-from direction import *
-from game_impl import GameImpl
-from game_map import GameMap
-from map import Map
-from player import Player
-from position import Position
+from game.game_impl import GameImpl
+from game_map.game_map import GameMap
+from map.map import Map
+from models.direction import *
+from models.player import Player
+from models.position import Position
 from random import randint
 
 

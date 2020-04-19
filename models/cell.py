@@ -1,6 +1,6 @@
 
-from direction import Direction
-from position import Position
+from models.direction import Direction
+from models.position import Position
 
 
 class Cell:

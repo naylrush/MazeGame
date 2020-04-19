@@ -1,6 +1,6 @@
 
-from cell import *
 from copy import deepcopy
+from models.cell import *
 
 
 class GameImpl:

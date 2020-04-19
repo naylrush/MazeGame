@@ -1,7 +1,7 @@
 
-from map_reader import *
-from map_writer import *
-from position import Position
+from map.map_reader import *
+from map.map_writer import *
+from models.position import Position
 
 
 class Map:

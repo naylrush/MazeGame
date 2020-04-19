@@ -1,8 +1,8 @@
 
-from game import Game
-from game_map import GameMap
-from map import Map
-from position import Position
+from game.game import Game
+from game_map.game_map import GameMap
+from map.map import Map
+from models.position import Position
 import argparse
 
 

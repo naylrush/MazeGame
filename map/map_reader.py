@@ -1,8 +1,8 @@
 
-from cell import *
 from copy import deepcopy
-from direction import *
-from position import Position
+from models.cell import *
+from models.direction import *
+from models.position import Position
 
 
 def read_map(path: str):

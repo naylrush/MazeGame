@@ -1,9 +1,9 @@
 
-from cell import Teleport, Exit
-from direction import Direction
-from player import *
-from position import Position
 from collections import deque
+from models.cell import Teleport, Exit
+from models.direction import Direction
+from models.player import *
+from models.position import Position
 
 
 def add_player(game_map, queue, position):
