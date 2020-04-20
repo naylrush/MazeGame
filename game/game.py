@@ -1,39 +1,39 @@
 
 from game.game_impl import GameImpl
-from game_map.game_map import GameMap
-from map.map import Map
+from game_field.game_field import GameField
+from field.field import Field
 from models.direction import *
 from models.player import Player
 from models.position import Position
 from random import randint
 
 
-def random_position_on_map(map: Map):
-    return Position(randint(0, map.x_size - 1), randint(0, map.y_size - 1))
+def random_position_on_field(field: Field):
+    return Position(randint(0, field.x_size - 1), randint(0, field.y_size - 1))
 
 
 class Game:
-    def __init__(self, maps, players_count, players_positions=None):
-        assert isinstance(maps, type([Map]))
+    def __init__(self, fields, players_count, players_positions=None):
+        assert isinstance(fields, type([Field]))
         assert isinstance(players_count, int)
         assert players_count > 0
         if players_positions is not None:
             assert isinstance(players_positions, type([Position]))
-        self.game_map = GameMap(maps[0])
-        self.key_required = self.game_map.map.has_key
-        self.game_map.check_map()
-        self.game_maps = [GameMap(maps[i]) for i in range(1, len(maps))]   # not implemented
+        self.game_field = GameField(fields[0])
+        self.key_required = self.game_field.field.has_key
+        self.game_field.check_field()
+        self.game_fields = [GameField(fields[i]) for i in range(1, len(fields))]   # not implemented
 
         self.players = []
         for i in range(players_count):
             self.players.append(Player())
             if players_positions is not None and i < len(players_positions):
                 self.players[-1].start_position = players_positions[i]
-                self.game_map.add_player_at(self.players[-1], players_positions[i])
+                self.game_field.add_player_at(self.players[-1], players_positions[i])
             else:
-                random_position = random_position_on_map(maps[0])
+                random_position = random_position_on_field(fields[0])
                 self.players[-1].start_position = random_position
-                self.game_map.add_player_at(self.players[-1], random_position)
+                self.game_field.add_player_at(self.players[-1], random_position)
 
         self.game_is_over = False
         self.current_player_index = 0
@@ -74,5 +74,5 @@ class Game:
 
     def start_game(self):
         if self.game_is_over:
-            self.__init__(self.game_maps, len(self.players))
+            self.__init__(self.game_fields, len(self.players))
         self.parse_actions()

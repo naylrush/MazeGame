@@ -1,18 +1,18 @@
 
 from game.game import *
-from game_map.game_map import GameMap
-from map.map import Map
+from game_field.game_field import GameField
+from field.field import Field
 from models.position import Position
 import argparse
 
 
-def check_map(args):
-    for map_path in args.map_paths:
-        map = Map()
-        map.read_from(map_path)
-        game_map = GameMap(map)
+def check_field(args):
+    for field_path in args.field_paths:
+        field = Field()
+        field.read_from(field_path)
+        game_field = GameField(field)
         try:
-            game_map.check_map()
+            game_field.check_field()
         except LookupError as position:
             print('FAILED ' + str(position))
         else:
@@ -20,8 +20,8 @@ def check_map(args):
 
 
 def play_game(args):
-    map = Map()
-    map.read_from(args.map_path)
+    field = Field()
+    field.read_from(args.field_path)
     if args.players == 0:
         args.players = int(input('How many players will play? — '))
     positions = []
@@ -31,15 +31,15 @@ def play_game(args):
             positions.append(Position(int(x), int(y)))
     if not args.random_positions:
         if args.players - len(positions) > 0:
-            print('Map size:', map.x_size, map.y_size)
+            print('Field size:', field.x_size, field.y_size)
             for i in range(len(positions), args.players):
                 position = input('Start position as (x,y) or "random" for Player ' + str(i) + ': ')
                 if position == 'random':
-                    positions.append(random_position_on_map(map))
+                    positions.append(random_position_on_field(field))
                 else:
                     x, y = position[1:len(position) - 1].split(',')
                     positions.append(Position(int(x), int(y)))
-    game = Game([map], args.players, positions)
+    game = Game([field], args.players, positions)
     game.start_game()
 
 
@@ -47,13 +47,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(title='modes')
 
-    check_parser = subparsers.add_parser('check', help='check --map <map_path/name>')
-    check_parser.add_argument('--map', type=str, nargs='+', action='store', dest='map_paths')
-    check_parser.set_defaults(func=check_map)
+    check_parser = subparsers.add_parser('check', help='check --field <field_path/name>')
+    check_parser.add_argument('--field', type=str, nargs='+', action='store', dest='field_paths')
+    check_parser.set_defaults(func=check_field)
 
     check_parser = subparsers.add_parser('game', help='\
-    game --map <map_path> --players <players_count> --start_positions <positions as (x,y)>')
-    check_parser.add_argument('--map', type=str, action='store', dest='map_path')
+    game --field <field_path> --players <players_count> --start_positions <positions as (x,y)>')
+    check_parser.add_argument('--field', type=str, action='store', dest='field_path')
     check_parser.add_argument('--players', type=int, action='store', dest='players', default=0)
     check_parser.add_argument('--start_positions', type=str, nargs='+', action='store', dest='positions', default=None)
     check_parser.add_argument('--random_positions', action='store_true', dest='random_positions', default=False)

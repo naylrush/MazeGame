@@ -4,7 +4,7 @@
 Консольная интерактивная версия игры на бумаге "Лабиринт". Суть игры такова: есть некое поле со стенами, ловушками и выходом,
 которые известны только ведущему. Остальные игроки в тайне друг от друга указывают ему координаты стартовой локации
 (или позиции выбираются рандомно). Дальше они начинают по очереди ходить по лабиринту, а ведущий сообщает им,
-упёрлись они в стену или смогли пройти. Таким образом, игроки исследуют карту, внимательно озираясь по сторонам, думая,
+упёрлись они в стену или смогли пройти. Таким образом, игроки исследуют поле, внимательно озираясь по сторонам, думая,
 где же расположены ловушки, и пытаясь добраться до выхода раньше соперников. Это продолжается до тех пор,
 пока какой-нибудь игрок не наткнётся на выход, имея при себе ключ, и тем самым он победит, заканчивая игру!
 
@@ -21,7 +21,7 @@
 то число патронов в его инвентаре становится равно 3м (максимум). Теперь он может стрелять в заданном направлении.
 Если он попадает в другого игрока, тот погибает, и он отправляется на свою стартовую позицию
 с пропуском своего следующего хода, а его инвентарь остаётся на позиции, на которой игрока убили.
-- **Выход**. Игроку необходим ключ, лежащий где-то на карте. Если игрок двигается из этой клетки в заданном направлении выхода,
+- **Выход**. Игроку необходим ключ, лежащий где-то на поле. Если игрок двигается из этой клетки в заданном направлении выхода,
 имея при себе ключ, он выигрывает, и игра для всех завершается, иначе ведущий сообщает, что игроку нужен ключ, чтобы выйти.
 
 ## Формат решения:
@@ -50,22 +50,22 @@
 
 **Команды для запуска:**
 ```
-check --map <map_paths/names>
+check --field <field_paths/names>
 =====
-game --map <map_path/name> --players <players_count> --start_positions <positions as (x, y)> --random_positions
+game --field <field_path/name> --players <players_count> --start_positions <positions as (x, y)> --random_positions
 ```
 *```--start_positions``` and ```--random_positions``` are optional arguments.*
 
 **Примеры команд:**
 ```
-check --map map.txt
-check --map map1.txt map2.txt  <-- you can ckeck multiple maps in a single query
+check --field field.txt
+check --field field1.txt field2.txt  <-- you can ckeck multiple fields in a single query
 =====
-game --map map.txt --random_positions <-- starts singleplayer game at a ramdom positions
-game --map map.txt --players 2  <-- start positions will be asked before the game starts
-game --map map.txt --players 2 --random_positions <-- start positions will be chosen randomly
-game --map map.txt --players 2 --start_positions (0,0) --random_positions
-game --map map.txt --players 2 --start_positions (0,0) (0,2)
+game --field field.txt --random_positions <-- starts singleplayer game at a ramdom positions
+game --field field.txt --players 2  <-- start positions will be asked before the game starts
+game --field field.txt --players 2 --random_positions <-- start positions will be chosen randomly
+game --field field.txt --players 2 --start_positions (0,0) --random_positions
+game --field field.txt --players 2 --start_positions (0,0) (0,2)
 ```
 
 ## Формат описания поля:

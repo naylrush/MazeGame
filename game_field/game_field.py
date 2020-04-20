@@ -1,22 +1,22 @@
 
-from game_map.game_map_checker import check_map
+from game_field.game_field_checker import check_field
 from models.cell import RubberRoom
 from models.position import Position
 
 
-class GameMap:
-    def __init__(self, map):
-        self.map = map
-        self.x_size = self.map.x_size
-        self.y_size = self.map.y_size
+class GameField:
+    def __init__(self, field):
+        self.field = field
+        self.x_size = self.field.x_size
+        self.y_size = self.field.y_size
         self.players_at_position = [[set() for _ in range(self.y_size)] for _ in range(self.x_size)]
         self.position_by_player = {}
 
     def __getitem__(self, position: Position):
-        return self.map[position]
+        return self.field[position]
 
     def reset(self):
-        self.__init__(self.map)
+        self.__init__(self.field)
 
     def players_at(self, position: Position):
         return self.players_at_position[position.x][position.y]
@@ -46,9 +46,9 @@ class GameMap:
         self.player_move_to(player, self.position_by_player[player].copy_shift_to(direction))
 
     def player_can_go_from_to(self, position, direction):
-        if self.map[position].has_border_at(direction) or\
-                self.map.is_out_of_map(position.copy_shift_to(direction)) or\
-                (isinstance(self.map[position], RubberRoom) and self.map[position].direction != direction):
+        if self.field[position].has_border_at(direction) or\
+                self.field.is_out_of_field(position.copy_shift_to(direction)) or\
+                (isinstance(self.field[position], RubberRoom) and self.field[position].direction != direction):
             return False
         return True
 
@@ -63,7 +63,7 @@ class GameMap:
         else:
             return False
 
-    def check_map(self):
-        position = check_map(self)
+    def check_field(self):
+        position = check_field(self)
         if position is not None:
             raise LookupError(position)

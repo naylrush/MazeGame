@@ -5,34 +5,34 @@ from models.direction import *
 from models.position import Position
 
 
-def write_map(map, path=''):
-    sym_map = [[] for _ in range(map.x_size * 2 - 1)]
+def write_field(field, path=''):
+    sym_field = [[] for _ in range(field.x_size * 2 - 1)]
 
     empty_sym = Empty().to_symbol()
     empty_border_sym = ' '
 
     unique_cells = {}
 
-    # generate symbol map
+    # generate symbol field
     teleport_count = 0
-    for i in range(map.x_size * 2 - 1):
-        for j in range(map.y_size * 2 - 1):
-            cell = map[Position(i // 2, j // 2)]
+    for i in range(field.x_size * 2 - 1):
+        for j in range(field.y_size * 2 - 1):
+            cell = field[Position(i // 2, j // 2)]
             if i & 1 == 0:
                 if j & 1 == 0:
                     cell_symbol = cell.to_symbol()
                     if isinstance(cell, Teleport):
                         teleport_count += 1
                         cell_symbol = str(teleport_count)
-                    sym_map[i].append(cell_symbol)
+                    sym_field[i].append(cell_symbol)
                     unique_cells[cell_symbol] = deepcopy(cell)
                 else:
-                    sym_map[i].append(RIGHT.to_symbol() if cell.has_border_at(RIGHT) else empty_border_sym)
+                    sym_field[i].append(RIGHT.to_symbol() if cell.has_border_at(RIGHT) else empty_border_sym)
             else:
                 if j & 1 == 0:
-                    sym_map[i].append(DOWN.to_symbol() if cell.has_border_at(DOWN) else empty_sym)
+                    sym_field[i].append(DOWN.to_symbol() if cell.has_border_at(DOWN) else empty_sym)
                 else:
-                    sym_map[i].append(empty_border_sym)
+                    sym_field[i].append(empty_border_sym)
 
     unique_cells.pop(Empty().to_symbol())
     # generate command by symbol
@@ -50,19 +50,19 @@ def write_map(map, path=''):
 
     # print
     if path == '':
-        print(map.x_size, map.y_size)
-        for line in sym_map:
+        print(field.x_size, field.y_size)
+        for line in sym_field:
             print(*line, sep='')
         for symbol, command in symbol_command.items():
             print(symbol, command)
     else:
         file = open(path, "w+")
-        with file as map_txt:
-            map_txt.write(str(map.x_size) + ' ' + str(map.y_size) + '\n')
-            for line in sym_map:
+        with file as field_txt:
+            field_txt.write(str(field.x_size) + ' ' + str(field.y_size) + '\n')
+            for line in sym_field:
                 for sym in line:
-                    map_txt.write(sym)
-                map_txt.write('\n')
+                    field_txt.write(sym)
+                field_txt.write('\n')
             for symbol, command in symbol_command.items():
-                map_txt.write(symbol + ' ' + command + '\n')
+                field_txt.write(symbol + ' ' + command + '\n')
         file.close()

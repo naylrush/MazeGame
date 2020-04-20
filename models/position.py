@@ -22,7 +22,7 @@ class Position:
     def __str__(self):
         return str((self.x, self.y))
 
-    # because of the way of storage a map
+    # because of the way of storage a field
     def shift_to(self, direction: Direction):
         shift_by_direction = {UP: Position(-1, 0), LEFT: Position(0, -1), DOWN: Position(1, 0), RIGHT: Position(0, 1)}
         self.__add__(shift_by_direction[direction])

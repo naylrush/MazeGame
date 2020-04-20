@@ -27,9 +27,9 @@ class GameImpl:
 
     def kill_player(self, game, killed_player):
         killed_player.stun = 1
-        game.game_map.player_position(killed_player).inventory = deepcopy(killed_player.inventory)
+        game.game_field.player_position(killed_player).inventory = deepcopy(killed_player.inventory)
         killed_player.inventory.reset()
-        game.game_map.player_move_to(killed_player, killed_player.start_position)
+        game.game_field.player_move_to(killed_player, killed_player.start_position)
         print('Player ' + str(game.current_player.id) + ' kills Player ' + str(killed_player.id) + '!')
         print('Player ' + str(killed_player.id) + ' has been teleported to his start position')
 
@@ -50,7 +50,7 @@ class GameImpl:
 
     def teleport_to(self, game, destination):
         print('You have been teleported')
-        game.game_map.player_move_to(game.current_player, destination)
+        game.game_field.player_move_to(game.current_player, destination)
 
     def key_required(self, game):
         print('You need a key to get out!')
@@ -67,9 +67,9 @@ class GameImpl:
             print('You are out of bullets')
             return False
         game.current_player.inventory.bullets -= 1
-        current_position = deepcopy(game.game_map.player_position(game.current_player))
-        while not game.game_map.map.is_out_of_map(current_position):
-            players = game.game_map.players_at(current_position)
+        current_position = deepcopy(game.game_field.player_position(game.current_player))
+        while not game.game_field.field.is_out_of_field(current_position):
+            players = game.game_field.players_at(current_position)
             if len(players) != 0 and not (len(players) == 1 and game.current_player in players):
                 if len(players) == 1 and game.current_player in players:
                     current_position.shift_to(direction)
@@ -113,7 +113,7 @@ For more information read this —— https://github.com/NaylRush/MazeGame
 @NaylRush''')
 
     def check_position(self, game):
-        current_cell = game.game_map.player_cell(game.current_player)
+        current_cell = game.game_field.player_cell(game.current_player)
         if current_cell.inventory is not None:
             self.take_inventory(game, current_cell)
         if isinstance(current_cell, Armory):
@@ -123,12 +123,12 @@ For more information read this —— https://github.com/NaylRush/MazeGame
             self.stun_for(game, current_cell.duration)
             return
         elif isinstance(current_cell, Teleport):
-            if isinstance(game.game_map.player_cell(game.current_player), Teleport):
+            if isinstance(game.game_field.player_cell(game.current_player), Teleport):
                 self.teleport_to(game, current_cell.destination)
             return
 
     def move_to(self, game, direction: Direction):
-        current_cell = game.game_map.player_cell(game.current_player)
+        current_cell = game.game_field.player_cell(game.current_player)
         # before step
         if isinstance(current_cell, RubberRoom):
             if direction != current_cell.direction:
@@ -140,7 +140,7 @@ For more information read this —— https://github.com/NaylRush/MazeGame
             self.try_to_exit(game)
             return
         # step
-        if not game.game_map.player_try_go_to(game.current_player, direction):
+        if not game.game_field.player_try_go_to(game.current_player, direction):
             self.unsuccessful(game)
         else:
             self.successful(game)
