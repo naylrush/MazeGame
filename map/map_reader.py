@@ -70,4 +70,4 @@ def read_map(path: str):
             map[key_position.x][key_position.y].inventory = Inventory(True)
 
     file.close()
-    return map
+    return map, game_with_key

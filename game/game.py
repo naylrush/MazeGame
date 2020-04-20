@@ -21,6 +21,7 @@ class Game:
         if players_positions is not None and not isinstance(players_positions, type([Position])):
             raise Exception('players_positions is not [Point]')
         self.game_map = GameMap(maps[0])
+        self.key_required = self.game_map.map.has_key
         self.game_map.check_map()
         self.game_maps = [GameMap(maps[i]) for i in range(1, len(maps))]   # not implemented
         self.players = []

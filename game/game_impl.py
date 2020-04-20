@@ -52,12 +52,15 @@ class GameImpl:
         print('You have been teleported')
         game.game_map.player_move_to(game.current_player, destination)
 
-    def gave_over(self, game):
-        game.game_is_over = True
-        print('Game is over! Player ' + str(game.current_player.id) + ' wins!')
-
     def key_required(self, game):
         print('You need a key to get out!')
+
+    def try_to_exit(self, game):
+        if game.key_required and not game.current_player.inventory.has_key:
+            self.key_required(game)
+            return
+        game.game_is_over = True
+        print('Game is over! Player ' + str(game.current_player.id) + ' wins!')
 
     def shoot(self, game, direction: Direction):
         if game.current_player.inventory.bullets == 0:
@@ -134,10 +137,7 @@ For more information read this —— https://github.com/NaylRush/MazeGame
             else:
                 self.leave_rubber_roome(game)
         elif type(current_cell) is Exit and direction == current_cell.direction:
-            if game.current_player.inventory.has_key:
-                self.gave_over(game)
-            else:
-                self.key_required(game)
+            self.try_to_exit(game)
             return
         # step
         if not game.game_map.player_try_go_to(game.current_player, direction):
