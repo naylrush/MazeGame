@@ -23,19 +23,19 @@ class GameImpl:
         game.game_field.player_position(killed_player).inventory = deepcopy(killed_player.inventory)
         killed_player.inventory.reset()
         game.game_field.player_move_to(killed_player, killed_player.start_position)
-        print('Player ' + str(game.current_player.id) + ' kills Player ' + str(killed_player.id) + '!')
-        print('Player ' + str(killed_player.id) + ' has been teleported to his start position')
+        print('Player {} kills Player {}!'.format(game.current_player.id, killed_player.id))
+        print('Player {} has been teleported to his start position'.format(killed_player.id))
 
     def stun_for(self, game, duration):
         game.current_player.stun = duration
-        print('You are stunned by ' + str(game.current_player.stun) + ' steps')
+        print('You are stunned by {} steps'. format(game.current_player.stun))
 
     def player_is_stunned(self, game):
         if game.current_player.stun == 0:
             return False
         stun = game.current_player.stun
-        print('Player ' + str(game.current_player.id) + ' is still stunned by ', end='')
-        print('1 step' if stun == 1 else (str(stun) + ' steps'))
+        print('Player {} is still stunned by {}'.format(game.current_player.id,
+              '1 step' if stun == 1 else (str(stun) + ' steps')))
         return True
 
     def player_leaved_rubber_room(self, game):
@@ -53,7 +53,7 @@ class GameImpl:
             self.key_required(game)
             return
         game.game_is_over = True
-        print('Game is over! Player ' + str(game.current_player.id) + ' wins!')
+        print('Game is over! Player {} wins!'.format(game.current_player.id))
 
     def shoot(self, game, direction: Direction):
         if game.current_player.inventory.bullets == 0:

@@ -14,7 +14,7 @@ def check_field(args):
         try:
             game_field.check_field()
         except LookupError as position:
-            print('FAILED ' + str(position))
+            print('FAILED {}'.format(position))
         else:
             print('OK')
 
@@ -33,7 +33,7 @@ def play_game(args):
         if args.players - len(positions) > 0:
             print('Field size:', field.x_size, field.y_size)
             for i in range(len(positions), args.players):
-                position = input('Start position as (x,y) or "random" for Player ' + str(i) + ': ')
+                position = input('Start position as (x,y) or "random" for Player {}: '.format(i))
                 if position == 'random':
                     positions.append(random_position_on_field(field))
                 else:

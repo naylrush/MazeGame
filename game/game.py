@@ -53,7 +53,7 @@ class Game:
             if self.game_impl.player_is_stunned(self):
                 self.current_player.stun -= 1
             else:
-                print('Player ' + str(self.current_player.id) + ' step', end='')
+                print('Player {} step'.format(self.current_player.id), end='')
                 while True:
                     in_command = input(' > ').upper()
                     key = in_command[0]

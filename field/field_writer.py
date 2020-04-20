@@ -58,11 +58,11 @@ def write_field(field, path=''):
     else:
         file = open(path, "w+")
         with file as field_txt:
-            field_txt.write(str(field.x_size) + ' ' + str(field.y_size) + '\n')
+            field_txt.write('{} {}\n'.format(field.x_size, field.y_size))
             for line in sym_field:
                 for sym in line:
                     field_txt.write(sym)
                 field_txt.write('\n')
             for symbol, command in symbol_command.items():
-                field_txt.write(symbol + ' ' + command + '\n')
+                field_txt.write('{} {}\n'.format(symbol, command))
         file.close()
