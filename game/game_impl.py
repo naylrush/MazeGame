@@ -101,7 +101,7 @@ class GameImpl:
     D — Right
 
 Actions:
-    X <W, A, S, D> - Shoot (type Q to break shooting)
+    X <W, A, S, D> - Shoot
 
 Other:
     E - Inventory

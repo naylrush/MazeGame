@@ -36,46 +36,43 @@ class Game:
                 self.game_map.add_player_at(self.players[-1], random_position)
 
         self.game_is_over = False
-        self.current_player_it = iter(self.players)
-        self.current_player = next(self.current_player_it)
+        self.current_player_index = 0
+        self.current_player = self.players[self.current_player_index]
         self.game_impl = GameImpl()
 
-    def wait_for_action(self):
+    def parse_shooting(self, in_command):
+        split_in_command = in_command.split(' ')
+        if len(split_in_command) == 1 or split_in_command[1] == '':
+            print('Correct use of shooting is: X <W/A/S/D>')
+            return False
+        key = split_in_command[1][0]
+        return self.game_impl.shoot(self, direction_by_key(key))
+
+    def parse_actions(self):
         while not self.game_is_over:
             if self.game_impl.player_is_stunned(self):
                 self.current_player.stun -= 1
             else:
                 print('Player ' + str(self.current_player.id) + ' step', end='')
                 while True:
-                    print(' > ', end='')
-                    in_command = input().upper()
+                    in_command = input(' > ').upper()
                     key = in_command[0]
                     if direction_by_key(key) in Direction:
                         self.game_impl.move_to(self, direction_by_key(key))
+                        break
                     elif key == 'E':
                         self.game_impl.whats_in_inventory(self)
-                        continue
                     elif key == 'X':
-                        if len(in_command.split(' ')) > 1:
-                            key = in_command.split(' ')[1][0]
-                        while not direction_by_key(key) in Direction and key != 'Q':
-                            print('shoot direction > ', end='')
-                            key = input()[0].upper()
-                        if key == 'Q' or not self.game_impl.shoot(self, direction_by_key(key)):
-                            continue
+                        if self.parse_shooting(in_command):
+                            break
                     elif key == '?':
                         self.game_impl.help(self)
-                        continue
                     else:
-                        continue
-                    break
-            try:
-                self.current_player = next(self.current_player_it)
-            except StopIteration:
-                self.current_player_it = iter(self.players)
-                self.current_player = next(self.current_player_it)
+                        print('You wrote incorrect command. Write "?" for help.')
+            self.current_player_index = (self.current_player_index + 1) % len(self.players)
+            self.current_player = self.players[self.current_player_index]
 
     def start_game(self):
         if self.game_is_over:
             self.__init__(self.game_maps, len(self.players))
-        self.wait_for_action()
+        self.parse_actions()
