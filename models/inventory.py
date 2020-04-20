@@ -20,3 +20,14 @@ class Inventory:
 
     def reset(self):
         self.__init__()
+
+    def __str__(self):
+        str_inventory = 'Inventory:\n'
+        if self.empty():
+            str_inventory += '\tNothing\n'
+        else:
+            if self.bullets > 0:
+                str_inventory += '\tBullets: {}\n'.format(self.bullets)
+            if self.has_key:
+                str_inventory += '\tKey\n'
+        return str_inventory[:-1]

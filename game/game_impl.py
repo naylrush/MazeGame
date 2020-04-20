@@ -11,14 +11,7 @@ class GameImpl:
         print('You bumped into a wall')
 
     def whats_in_inventory(self, game):
-        print('Inventory:')
-        if game.current_player.inventory.empty():
-            print('\tNothing')
-        else:
-            if game.current_player.inventory.bullets > 0:
-                print('\tBullets: ' + str(game.current_player.inventory.bullets))
-            if game.current_player.inventory.has_key:
-                print('\tKey')
+        print(game.current_player.inventory)
 
     def update_bullets(self, game):
         game.current_player.inventory.update_bullets()
