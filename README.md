@@ -50,9 +50,9 @@
 
 **Команды для запуска:**
 ```
-check --field <field_paths/names>
+check --field <field_paths>
 =====
-game --field <field_path/name> --players <players_count> --start_positions <positions as (x, y)> --random_positions
+game --field <field_paths> --players <players_count> --start_positions <positions as (x, y)> --random_positions
 ```
 *```--start_positions``` and ```--random_positions``` are optional arguments.*
 
