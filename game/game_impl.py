@@ -22,7 +22,7 @@ class GameImpl:
         killed_player.stun = 1
         game.game_field.player_position(killed_player).inventory = deepcopy(killed_player.inventory)
         killed_player.inventory.reset()
-        game.game_field.player_move_to(killed_player, killed_player.start_position)
+        game.game_field.player_go_to(killed_player, killed_player.start_position)
         print('Player {} kills Player {}!'.format(game.current_player.id, killed_player.id))
         print('Player {} has been teleported to his start position'.format(killed_player.id))
 
@@ -43,7 +43,7 @@ class GameImpl:
 
     def teleport_to(self, game, destination):
         print('You have been teleported')
-        game.game_field.player_move_to(game.current_player, destination)
+        game.game_field.player_go_to(game.current_player, destination)
 
     def key_required(self, game):
         print('You need a key to get out!')
@@ -120,7 +120,7 @@ For more information read this —— https://github.com/NaylRush/MazeGame
                 self.teleport_to(game, current_cell.destination)
             return
 
-    def move_to(self, game, direction: Direction):
+    def go_to(self, game, direction: Direction):
         current_cell = game.game_field.player_cell(game.current_player)
         # before step
         if isinstance(current_cell, RubberRoom):

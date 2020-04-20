@@ -58,7 +58,7 @@ class Game:
                     in_command = input(' > ').upper()
                     key = in_command[0]
                     if direction_by_key(key) in Direction:
-                        self.game_impl.move_to(self, direction_by_key(key))
+                        self.game_impl.go_to(self, direction_by_key(key))
                         break
                     elif key == 'E':
                         self.game_impl.whats_in_inventory(self)

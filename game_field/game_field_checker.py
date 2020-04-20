@@ -27,7 +27,7 @@ def check_field(game_field):
             exit_position = current_player_position
             break
         if isinstance(game_field.player_cell(current_player), Teleport):
-            game_field.player_move_to(current_player, game_field.player_cell(current_player).destination)
+            game_field.player_go_to(current_player, game_field.player_cell(current_player).destination)
             queue.appendleft(current_player)
         else:
             for direction in Direction:

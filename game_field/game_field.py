@@ -1,6 +1,7 @@
 
 from game_field.game_field_checker import check_field
 from models.cell import RubberRoom
+from models.direction import Direction
 from models.position import Position
 
 
@@ -36,14 +37,14 @@ class GameField:
         self.players_at_position[player_position.x][player_position.y].remove(player)
         del self.position_by_player[player]
 
-    def player_move_to(self, player, new_position: Position):
+    def player_go_to(self, player, destination):
+        assert isinstance(destination, Direction) or isinstance(destination, Position)
+        if isinstance(destination, Direction):
+            destination = self.position_by_player[player].copy_shift_to(destination)
         player_position = self.position_by_player[player]
         self.players_at_position[player_position.x][player_position.y].remove(player)
-        self.position_by_player[player] = new_position
-        self.players_at_position[new_position.x][new_position.y].add(player)
-
-    def player_go_to(self, player, direction):
-        self.player_move_to(player, self.position_by_player[player].copy_shift_to(direction))
+        self.position_by_player[player] = destination
+        self.players_at_position[destination.x][destination.y].add(player)
 
     def player_can_go_from_to(self, position, direction):
         if self.field[position].has_border_at(direction) or\
