@@ -61,7 +61,7 @@ def read_map(path: str):
         # add teleport points
         for x in range(x_size):
             for y in range(y_size):
-                if type(map[x][y]) is Teleport:
+                if isinstance(map[x][y], Teleport):
                     destination = map[x][y].destination
                     map[destination.x][destination.y].teleport_dest_from.append(Position(x, y))
 

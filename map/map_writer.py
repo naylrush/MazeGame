@@ -21,7 +21,7 @@ def write_map(map, path=''):
             if i & 1 == 0:
                 if j & 1 == 0:
                     cell_symbol = cell.to_symbol()
-                    if type(cell) is Teleport:
+                    if isinstance(cell, Teleport):
                         teleport_count += 1
                         cell_symbol = str(teleport_count)
                     sym_map[i].append(cell_symbol)
@@ -39,11 +39,11 @@ def write_map(map, path=''):
     symbol_command = {}
     for cell_symbol, cell in unique_cells.items():
         command = cell.name + '('
-        if type(cell) is Exit or type(cell) is RubberRoom:
+        if isinstance(cell, Exit) or isinstance(cell, RubberRoom):
             command += cell.direction.name
-        elif type(cell) is Stun:
+        elif isinstance(cell, Stun):
             command += str(cell.duration)
-        elif type(cell) is Teleport:
+        elif isinstance(cell, Teleport):
             command += str(cell.destination)
         command += ')'
         symbol_command[cell_symbol] = command

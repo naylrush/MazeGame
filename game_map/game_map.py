@@ -48,7 +48,7 @@ class GameMap:
     def player_can_go_from_to(self, position, direction):
         if self.map[position].has_border_at(direction) or\
                 self.map.is_out_of_map(position.copy_shift_to(direction)) or\
-                (type(self.map[position]) is RubberRoom and self.map[position].direction != direction):
+                (isinstance(self.map[position], RubberRoom) and self.map[position].direction != direction):
             return False
         return True
 

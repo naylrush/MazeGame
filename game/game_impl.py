@@ -116,27 +116,27 @@ For more information read this —— https://github.com/NaylRush/MazeGame
         current_cell = game.game_map.player_cell(game.current_player)
         if current_cell.inventory is not None:
             self.take_inventory(game, current_cell)
-        if type(current_cell) is Armory:
+        if isinstance(current_cell, Armory):
             self.update_bullets(game)
             return
-        elif type(current_cell) is Stun:
+        elif isinstance(current_cell, Stun):
             self.stun_for(game, current_cell.duration)
             return
-        elif type(current_cell) is Teleport:
-            if type(game.game_map.player_cell(game.current_player)) is Teleport:
+        elif isinstance(current_cell, Teleport):
+            if isinstance(game.game_map.player_cell(game.current_player), Teleport):
                 self.teleport_to(game, current_cell.destination)
             return
 
     def move_to(self, game, direction: Direction):
         current_cell = game.game_map.player_cell(game.current_player)
         # before step
-        if type(current_cell) is RubberRoom:
+        if isinstance(current_cell, RubberRoom):
             if direction != current_cell.direction:
                 self.successful(game)
                 return
             else:
                 self.leave_rubber_roome(game)
-        elif type(current_cell) is Exit and direction == current_cell.direction:
+        elif isinstance(current_cell, Exit) and direction == current_cell.direction:
             self.try_to_exit(game)
             return
         # step

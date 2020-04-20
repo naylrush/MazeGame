@@ -23,10 +23,10 @@ def check_map(game_map):
         current_player = queue.popleft()
         current_player_position = game_map.player_position(current_player)
         visited[current_player_position.x][current_player_position.y] = True
-        if type(game_map.player_cell(current_player)) is Exit:
+        if isinstance(game_map.player_cell(current_player), Exit):
             exit_position = current_player_position
             break
-        if type(game_map.player_cell(current_player)) is Teleport:
+        if isinstance(game_map.player_cell(current_player), Teleport):
             game_map.player_move_to(current_player, game_map.player_cell(current_player).destination)
             queue.appendleft(current_player)
         else:

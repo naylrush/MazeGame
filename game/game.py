@@ -13,17 +13,17 @@ def random_position_on_map(map: Map):
 
 
 class Game:
-    def __init__(self,  maps=None, players_count=0, players_positions=None):
-        if maps is None or not isinstance(maps, type([Map])) or len(maps) == 0:
-            raise Exception('maps are not given or they are not [Map]')
-        if players_count <= 0 or type(players_count) is not int:
-            raise Exception('players_count is not int or <= 0')
-        if players_positions is not None and not isinstance(players_positions, type([Position])):
-            raise Exception('players_positions is not [Point]')
+    def __init__(self,  maps, players_count, players_positions=None):
+        assert isinstance(maps, type([Map]))
+        assert isinstance(players_count, int)
+        assert players_count > 0
+        if players_positions is not None:
+            assert isinstance(players_positions, type([Position]))
         self.game_map = GameMap(maps[0])
         self.key_required = self.game_map.map.has_key
         self.game_map.check_map()
         self.game_maps = [GameMap(maps[i]) for i in range(1, len(maps))]   # not implemented
+
         self.players = []
         for i in range(players_count):
             self.players.append(Player())
@@ -34,6 +34,7 @@ class Game:
                 random_position = self.random_position_on_map(maps[0])
                 self.players[-1].start_position = random_position
                 self.game_map.add_player_at(self.players[-1], random_position)
+
         self.game_is_over = False
         self.current_player_it = iter(self.players)
         self.current_player = next(self.current_player_it)

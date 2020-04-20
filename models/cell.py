@@ -35,8 +35,7 @@ class Empty(Cell):
 
 class Stun(Cell):
     def __init__(self, duration: int):
-        if duration < 0:
-            raise Exception('duration must be >= 0')
+        assert duration >= 0
         super().__init__()
         self.duration = duration
 
@@ -52,6 +51,7 @@ class RubberRoom(Cell):
 
 class Teleport(Cell):
     def __init__(self, dest: tuple):
+        assert isinstance(dest, tuple)
         super().__init__()
         self.destination = Position(dest[0], dest[1])
 
