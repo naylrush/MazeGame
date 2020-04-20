@@ -45,7 +45,7 @@ class GameImpl:
         print('1 step' if stun == 1 else (str(stun) + ' steps'))
         return True
 
-    def leave_rubber_roome(self, game):
+    def player_leaved_rubber_room(self, game):
         print('You leaved a rubber room')
 
     def teleport_to(self, game, destination):
@@ -135,7 +135,7 @@ For more information read this —— https://github.com/NaylRush/MazeGame
                 self.successful(game)
                 return
             else:
-                self.leave_rubber_roome(game)
+                self.player_leaved_rubber_room(game)
         elif isinstance(current_cell, Exit) and direction == current_cell.direction:
             self.try_to_exit(game)
             return

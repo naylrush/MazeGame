@@ -25,7 +25,7 @@ class GameMap:
         return self.position_by_player[player]
 
     def player_cell(self, player):
-        return self.__getitem__(self.position_by_player[player])
+        return self[self.position_by_player[player]]
 
     def add_player_at(self, player, position: Position):
         self.players_at_position[position.x][position.y].add(player)

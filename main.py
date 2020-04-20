@@ -44,7 +44,7 @@ def play_game(args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Videos to images')
+    parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(title='modes')
 
     check_parser = subparsers.add_parser('check', help='check --map <map_path/name>')

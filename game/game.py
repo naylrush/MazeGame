@@ -13,7 +13,7 @@ def random_position_on_map(map: Map):
 
 
 class Game:
-    def __init__(self,  maps, players_count, players_positions=None):
+    def __init__(self, maps, players_count, players_positions=None):
         assert isinstance(maps, type([Map]))
         assert isinstance(players_count, int)
         assert players_count > 0
@@ -31,7 +31,7 @@ class Game:
                 self.players[-1].start_position = players_positions[i]
                 self.game_map.add_player_at(self.players[-1], players_positions[i])
             else:
-                random_position = self.random_position_on_map(maps[0])
+                random_position = random_position_on_map(maps[0])
                 self.players[-1].start_position = random_position
                 self.game_map.add_player_at(self.players[-1], random_position)
 
@@ -49,7 +49,7 @@ class Game:
                 while True:
                     print(' > ', end='')
                     in_command = input().upper()
-                    key = in_command[0:1]
+                    key = in_command[0]
                     if direction_by_key(key) in Direction:
                         self.game_impl.move_to(self, direction_by_key(key))
                     elif key == 'E':
@@ -57,10 +57,10 @@ class Game:
                         continue
                     elif key == 'X':
                         if len(in_command.split(' ')) > 1:
-                            key = in_command.split(' ')[1][0:1]
+                            key = in_command.split(' ')[1][0]
                         while not direction_by_key(key) in Direction and key != 'Q':
                             print('shoot direction > ', end='')
-                            key = input()[0:1].upper()
+                            key = input()[0].upper()
                         if key == 'Q' or not self.game_impl.shoot(self, direction_by_key(key)):
                             continue
                     elif key == '?':
