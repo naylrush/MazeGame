@@ -1,7 +1,7 @@
 
-from game.game import *
-from game_field.game_field import GameField
 from field.field import Field
+from game.game import Game, random_position_on_field
+from game_field.game_field import GameField
 from models.position import Position
 import argparse
 

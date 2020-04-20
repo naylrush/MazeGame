@@ -1,6 +1,6 @@
 
-from field.field_reader import *
-from field.field_writer import *
+from field.field_reader import read_field
+from field.field_writer import write_field
 from models.position import Position
 
 

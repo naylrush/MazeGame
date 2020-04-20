@@ -1,8 +1,8 @@
 
+from field.field import Field
 from game.game_impl import GameImpl
 from game_field.game_field import GameField
-from field.field import Field
-from models.direction import *
+from models.direction import Direction, direction_by_key
 from models.player import Player
 from models.position import Position
 from random import randint

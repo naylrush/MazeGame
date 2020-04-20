@@ -2,7 +2,8 @@
 from collections import deque
 from models.cell import Teleport, Exit
 from models.direction import Direction
-from models.player import *
+from models.player import Player
+from models.player import reset_player_total_ids
 from models.position import Position
 
 

@@ -1,6 +1,6 @@
 
 from copy import deepcopy
-from models.direction import *
+from models.direction import Direction, UP, LEFT, DOWN, RIGHT
 
 
 class Position:

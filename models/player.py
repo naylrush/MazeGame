@@ -1,6 +1,6 @@
 
-from models.position import Position
 from models.inventory import Inventory
+from models.position import Position
 
 
 total_ids = 0

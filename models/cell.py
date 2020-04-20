@@ -1,6 +1,5 @@
 
 from models.direction import Direction
-from models.inventory import Inventory
 from models.position import Position
 
 

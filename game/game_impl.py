@@ -1,6 +1,7 @@
 
 from copy import deepcopy
-from models.cell import *
+from models.cell import Stun, RubberRoom, Teleport, Armory, Exit
+from models.direction import Direction
 
 
 class GameImpl:
