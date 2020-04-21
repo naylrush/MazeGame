@@ -54,7 +54,7 @@ def read_field(path: str):
         for column in range(x_size - 1):
             line = 0
             for sym in lines[2 + column * 2][:y_size * 2:2]:
-                if sym == '_':
+                if sym == '_' or sym == '-':
                     field[column][line].add_border_at(DOWN)
                     field[column + 1][line].add_border_at(UP)
                 line += 1
