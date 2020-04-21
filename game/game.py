@@ -3,13 +3,7 @@ from field.field import Field
 from game.game_impl import GameImpl
 from game_field.game_field import GameField
 from models.direction import Direction, direction_by_key
-from models.player import Player
 from models.position import Position
-from random import randint
-
-
-def random_position_on_field(field: Field):
-    return Position(randint(0, field.x_size - 1), randint(0, field.y_size - 1))
 
 
 class Game:
@@ -24,21 +18,11 @@ class Game:
         self.game_field.check_field()
         self.game_fields = [GameField(fields[i]) for i in range(1, len(fields))]   # not implemented
 
-        self.players = []
-        for i in range(players_count):
-            self.players.append(Player())
-            if players_positions is not None and i < len(players_positions):
-                self.players[-1].start_position = players_positions[i]
-                self.game_field.add_player_at(self.players[-1], players_positions[i])
-            else:
-                random_position = random_position_on_field(fields[0])
-                self.players[-1].start_position = random_position
-                self.game_field.add_player_at(self.players[-1], random_position)
+        self.game_impl = GameImpl()
+        self.players = self.game_impl.place_players(self, players_count, players_positions)
+        self.current_player = self.game_impl.calc_next_player(self)
 
         self.game_is_over = False
-        self.current_player_index = 0
-        self.current_player = self.players[self.current_player_index]
-        self.game_impl = GameImpl()
 
     def parse_shooting(self, in_command):
         split_in_command = in_command.split(' ')
@@ -50,13 +34,11 @@ class Game:
 
     def parse_actions(self):
         while not self.game_is_over:
-            if self.game_impl.player_is_stunned(self):
-                self.current_player.stun -= 1
-            else:
+            if self.game_impl.can_player_go(self):
                 print('Player {} step'.format(self.current_player.id), end='')
                 while True:
                     in_command = input(' > ').upper()
-                    key = in_command[0]
+                    key = in_command[0] if len(in_command) > 0 else ''
                     if direction_by_key(key) in Direction:
                         self.game_impl.go_to(self, direction_by_key(key))
                         break
@@ -69,8 +51,7 @@ class Game:
                         self.game_impl.help(self)
                     else:
                         print('You wrote incorrect command. Write "?" for help.')
-            self.current_player_index = (self.current_player_index + 1) % len(self.players)
-            self.current_player = self.players[self.current_player_index]
+            self.current_player = self.game_impl.calc_next_player(self)
 
     def start_game(self):
         if self.game_is_over:

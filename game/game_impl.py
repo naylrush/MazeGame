@@ -1,10 +1,15 @@
 
 from copy import deepcopy
+from game_field.game_field import random_position_on_field
 from models.cell import Stun, RubberRoom, Teleport, Armory, Exit
 from models.direction import Direction
+from models.player import Player
 
 
 class GameImpl:
+    def __init__(self):
+        self.current_player_index = 0
+
     def successful(self, game):
         print('You passed')
 
@@ -31,13 +36,14 @@ class GameImpl:
         game.current_player.stun = duration
         print('You are stunned by {} steps'. format(game.current_player.stun))
 
-    def player_is_stunned(self, game):
+    def can_player_go(self, game):
         if game.current_player.stun == 0:
-            return False
+            return True
         stun = game.current_player.stun
         print('Player {} is still stunned by {}'.format(game.current_player.id,
               '1 step' if stun == 1 else (str(stun) + ' steps')))
-        return True
+        game.current_player.stun -= 1
+        return False
 
     def player_leaved_rubber_room(self, game):
         print('You leaved a rubber room')
@@ -105,6 +111,23 @@ After any action except 'Other' you make a step.
 
 For more information read this —— https://github.com/NaylRush/MazeGame
 @NaylRush''')
+
+    def calc_next_player(self, game):
+        self.current_player_index = (self.current_player_index + 1) % len(game.players)
+        return game.players[self.current_player_index]
+
+    def place_players(self, game, players_count, players_positions):
+        players = []
+        for i in range(players_count):
+            players.append(Player())
+            if players_positions is not None and i < len(players_positions):
+                players[-1].start_position = players_positions[i]
+                game.game_field.add_player_at(players[-1], players_positions[i])
+            else:
+                random_position = random_position_on_field(game.fields[0])
+                players[-1].start_position = random_position
+                game.game_field.add_player_at(players[-1], random_position)
+        return players
 
     def check_position(self, game):
         current_cell = game.game_field.player_cell(game.current_player)

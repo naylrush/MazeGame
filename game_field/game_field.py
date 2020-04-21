@@ -1,8 +1,14 @@
 
+from field.field import Field
 from game_field.game_field_checker import check_field
 from models.cell import RubberRoom
 from models.direction import Direction
 from models.position import Position
+from random import randint
+
+
+def random_position_on_field(field: Field):
+    return Position(randint(0, field.x_size - 1), randint(0, field.y_size - 1))
 
 
 class GameField:
