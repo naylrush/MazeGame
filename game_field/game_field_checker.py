@@ -13,13 +13,9 @@ def add_player(game_field, queue, position):
     queue.appendleft(new_player)
 
 
-def check_field(game_field):
-    visited = [[False for _ in range(game_field.y_size)] for _ in range(game_field.x_size)]
-    player = Player()
-    game_field.add_player_at(player, Position(0, 0))
-    queue = deque()
-    queue.appendleft(player)
+def find_exit(game_field, queue):
     exit_position = None
+    visited = [[False for _ in range(game_field.y_size)] for _ in range(game_field.x_size)]
     while len(queue) > 0:  # DFS
         current_player = queue.popleft()
         current_player_position = game_field.player_position(current_player)
@@ -36,17 +32,12 @@ def check_field(game_field):
                     new_position = current_player_position.copy_shift_to(direction)
                     if not visited[new_position.x][new_position.y]:
                         add_player(game_field, queue, new_position)
+    return exit_position
 
-    if exit_position is None:
-        return Position(0, 0)
-    game_field.reset()
-    reset_player_total_ids()
+
+def bypass_field(exit_position, game_field, queue):
     visited = [[False for _ in range(game_field.y_size)] for _ in range(game_field.x_size)]
     visited[exit_position.x][exit_position.y] = True
-    player = Player()
-    game_field.add_player_at(player, exit_position)
-    queue = deque()
-    queue.appendleft(player)
     while len(queue) > 0:
         current_player = queue.popleft()
         for teleport_point in game_field.player_cell(current_player).teleport_dest_from:
@@ -63,6 +54,26 @@ def check_field(game_field):
                         new_player = Player()
                         game_field.add_player_at(new_player, new_position)
                         queue.appendleft(new_player)
+    return visited
+
+
+def check_field(game_field):
+    player = Player()
+    game_field.add_player_at(player, Position(0, 0))
+    queue = deque()
+    queue.appendleft(player)
+    exit_position = find_exit(game_field, queue)
+
+    if exit_position is None:
+        return Position(0, 0)
+    game_field.reset()
+    reset_player_total_ids()
+
+    player = Player()
+    game_field.add_player_at(player, exit_position)
+    queue = deque()
+    queue.appendleft(player)
+    visited = bypass_field(exit_position, game_field, queue)
 
     game_field.reset()
     reset_player_total_ids()
