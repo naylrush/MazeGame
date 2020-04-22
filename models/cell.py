@@ -81,7 +81,7 @@ class Teleport(Cell):
         self.destination = Position(dest[0], dest[1])
 
     def arrive(self, game, game_impl):
-        current_field = game.game_fields[game.current_player.field_id]
+        current_field = game.game_fields[game.current_player.field_id[-1]]
         current_field.player_go_to(game.current_player, self.destination)
         print('You have been teleported')
         current_field.player_cell(game.current_player).take_inventory(game)
@@ -97,6 +97,21 @@ class Armory(Cell):
         print(game.current_player.inventory)
 
 
+class Sleep(Cell):
+    def __init__(self, duration: int, coords: tuple):
+        assert duration >= 0
+        assert isinstance(coords, tuple) and len(coords) == 3
+        super().__init__()
+        self.duration = duration
+        self.destination_map_id = coords[0]
+        self.destination_position = Position(coords[1], coords[2])
+
+    def arrive(self, game, game_impl):
+        game.game_fields[self.destination_map_id].add_player_at(game.current_player, self.destination_position)
+        game.current_player.field_id.append(self.destination_map_id)
+        game.current_player.sleep_for(self.duration)
+
+
 class Exit(Cell):
     def __init__(self, direction: Direction):
         super().__init__()
@@ -108,6 +123,10 @@ class Exit(Cell):
         if game.key_required and not game.current_player.inventory.has_key:
             print('You need a key to get out!')
         else:
+            if game.current_player.is_sleeping():
+                print('You won the game! But it was a dream and you waked up...')
+                game_impl.wake_up_player()
+                return None
             game.game_is_over = True
             print('Game is over! Player {} wins!'.format(game.current_player.id))
         return None

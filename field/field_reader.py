@@ -1,7 +1,7 @@
 
 from copy import deepcopy
 from field.field import Field
-from models.cell import Empty, Stun, RubberRoom, Teleport, Armory, Exit
+from models.cell import Empty, Stun, RubberRoom, Teleport, Armory, Sleep, Exit
 from models.direction import UP, LEFT, DOWN, RIGHT
 from models.inventory import Inventory
 from models.position import Position

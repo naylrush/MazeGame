@@ -1,0 +1,13 @@
+3
+2 2
+A .
+. .
+Z E
+1 2
+. z
+1 1
+.
+A Armory()
+E Exit(RIGHT)
+Z Sleep(2, (1, 0, 0))
+z Sleep(2, (2, 0, 0))

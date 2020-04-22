@@ -29,6 +29,7 @@ class GameImpl:
         return players
 
     def can_player_go(self, game):
+        self.try_wake_up_player(game)
         if game.current_player.stun == 0:
             return True
         stun = game.current_player.stun
@@ -37,19 +38,41 @@ class GameImpl:
         game.current_player.stun -= 1
         return False
 
+    def wake_up_player(self, game, player):
+        player.wake_up()
+        game.game_fields[player.field_id[-1]].remove_player(player)
+        player.field_id.pop(-1)
+
+    def try_wake_up_player(self, game):
+        if len(game.current_player.sleep_times) == 0:
+            return
+        if game.current_player.sleep_times[-1] == 0:
+            self.wake_up_player(game, game.current_player)
+            self.you_waked_up()
+            print(game.current_player.inventory)
+        else:
+            game.current_player.sleep_times[-1] -= 1
+
     def successful(self):
         print('You passed')
 
     def unsuccessful(self):
         print('You bumped into a wall')
 
+    def you_waked_up(self):
+        print('You waked up')
+
     def kill_player(self, game, killed_player):
+        if killed_player.is_sleeping():
+            self.wake_up_player(game, killed_player)
+            print('Player {} kills sleep Player {} and wakes him up!'.format(game.current_player.id, killed_player.id))
+        else:
+            print('Player {} kills Player {}!'.format(game.current_player.id, killed_player.id))
         killed_player.stun = 1
         killed_player_field = game.game_fields[killed_player.field_id]
         killed_player_field.player_position(killed_player).inventory = deepcopy(killed_player.inventory)
         killed_player.inventory.reset()
         killed_player_field.player_go_to(killed_player, killed_player.start_position)
-        print('Player {} kills Player {}!'.format(game.current_player.id, killed_player.id))
         print('Player {} has been teleported to his start position'.format(killed_player.id))
 
     def shoot(self, game, direction: Direction):
@@ -57,7 +80,7 @@ class GameImpl:
             print('You are out of bullets')
             return False
         game.current_player.inventory.bullets -= 1
-        current_field = game.game_fields[game.current_player.field_id]
+        current_field = game.game_fields[game.current_player.field_id[-1]]
         current_position = deepcopy(current_field.player_position(game.current_player))
         while not current_field.field.is_out_of_field(current_position):
             players = current_field.players_at(current_position)
@@ -70,6 +93,12 @@ class GameImpl:
                     killed_player = players.pop()
                     players.add(game.current_player)
                 players.add(killed_player)
+                if game.current_player.is_sleeping():
+                    print('You killed Player {} when was sleeping and waked up with him'.format(killed_player.id))
+                    self.wake_up_player(game, game.current_player)
+                    self.wake_up_player(game, killed_player)
+                    self.you_waked_up()
+                    return True
                 self.kill_player(game, killed_player)
                 return True
             current_position.shift_to(direction)
@@ -97,7 +126,7 @@ For more information read this —— https://github.com/NaylRush/MazeGame
 
     def go_to(self, game, direction: Direction):
         # before step
-        current_field = game.game_fields[game.current_player.field_id]
+        current_field = game.game_fields[game.current_player.field_id[-1]]
         current_cell = current_field.player_cell(game.current_player)
         result = current_cell.can_go_this_direction(game, self, direction)
         if result is None:
