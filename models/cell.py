@@ -4,9 +4,9 @@ from models.position import Position
 
 
 class Cell:
-    def __init__(self, position=Position()):
+    def __init__(self):
         self.name = type(self).__name__
-        self.position = position
+        self.position = None
         self.borders = {direction: False for direction in Direction}
         self.teleport_dest_from = []
         self.inventory = None
@@ -81,9 +81,10 @@ class Teleport(Cell):
         self.destination = Position(dest[0], dest[1])
 
     def arrive(self, game, game_impl):
-        game.game_fields[0].player_go_to(game.current_player, self.destination)
+        current_field = game.game_fields[game.current_player.field_id]
+        current_field.player_go_to(game.current_player, self.destination)
         print('You have been teleported')
-        game.game_fields[0].player_cell(game.current_player).take_inventory(game)
+        current_field.player_cell(game.current_player).take_inventory(game)
 
 
 class Armory(Cell):

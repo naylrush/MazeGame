@@ -18,4 +18,5 @@ class Player:
         total_ids += 1
         self.inventory = Inventory()
         self.stun = 0
+        self.field_id = 0
         self.start_position = start_position

@@ -50,22 +50,22 @@
 
 **Команды для запуска:**
 ```
-check --field <field_paths>
+check --fields <field_paths>
 =====
-game --field <field_paths> --players <players_count> --start_positions <positions as (x, y)> --random_positions
+game --fields <field_paths> --players <players_count> --start_positions <positions as (x, y)> --random_positions
 ```
 *```--start_positions``` and ```--random_positions``` are optional arguments.*
 
 **Примеры команд:**
 ```
-check --field field.txt
-check --field field1.txt field2.txt  <-- you can ckeck multiple fields in a single query
+check --fields field.txt
+check --fields field1.txt field2.txt  <-- you can ckeck multiple fields in a single query
 =====
-game --field field.txt --random_positions <-- starts singleplayer game at a ramdom positions
-game --field field.txt --players 2  <-- start positions will be asked before the game starts
-game --field field.txt --players 2 --random_positions <-- start positions will be chosen randomly
-game --field field.txt --players 2 --start_positions (0,0) --random_positions
-game --field field.txt --players 2 --start_positions (0,0) (0,2)
+game --fields field.txt --random_positions <-- starts singleplayer game at a ramdom positions
+game --fields field.txt --players 2  <-- start positions will be asked before the game starts
+game --fields field.txt --players 2 --random_positions <-- start positions will be chosen randomly
+game --fields field.txt --players 2 --start_positions (0,0) --random_positions
+game --fields field.txt --players 2 --start_positions (0,0) (0,2)
 ```
 
 ## Формат описания поля:

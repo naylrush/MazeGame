@@ -1,9 +1,9 @@
 Check:
-check --field field1.txt
-check --field field1.txt field2.txt
+check --fields field1.txt
+check --fields field1.txt field2.txt
 
 Game:
-game --field field1.txt
-game --field field1.txt --players 2
-game --field field1.txt --players 2 --start_positions (0,0)
-game --field field1.txt --players 2 --start_positions (0,0) (0,2)
+game --fields field1.txt
+game --fields field1.txt --players 2
+game --fields field1.txt --players 2 --start_positions (0,0)
+game --fields field1.txt --players 2 --start_positions (0,0) (0,2)

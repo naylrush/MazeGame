@@ -1,5 +1,5 @@
 
-from field.field import Field
+from field.field_reader import read_fields
 from game.game import Game
 from game_field.game_field import GameField, random_position_on_field
 from models.position import Position
@@ -11,15 +11,15 @@ def check_field(args):
     if isinstance(args.field_paths, str):
         args.field_paths = [args.field_paths]
     for field_path in args.field_paths:
-        field = Field()
-        field.read_from(field_path)
-        game_field = GameField(field)
-        try:
-            game_field.check_field()
-        except LookupError as position:
-            print('FAILED {}'.format(position))
-        else:
-            print('OK')
+        fields = read_fields(field_path)
+        for field in fields:
+            game_field = GameField(field)
+            try:
+                game_field.check_field()
+            except LookupError as position:
+                print('FAILED {}'.format(position))
+            else:
+                print('OK')
 
 
 def play_game(args):
@@ -28,9 +28,7 @@ def play_game(args):
         args.field_paths = [args.field_paths]
     fields = []
     for field_path in args.field_paths:
-        field = Field()
-        field.read_from(field_path)
-        fields.append(field)
+        fields += read_fields(field_path)
     if args.players == 0:
         args.players = int(input('How many players will play? — '))
     positions = []
@@ -56,13 +54,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(title='modes')
 
-    check_parser = subparsers.add_parser('check', help='check --field <field_paths>')
-    check_parser.add_argument('--field', type=str, nargs='+', action='store', dest='field_paths')
+    check_parser = subparsers.add_parser('check', help='check --fields <field_paths>')
+    check_parser.add_argument('--fields', type=str, nargs='+', action='store', dest='field_paths')
     check_parser.set_defaults(func=check_field)
 
     check_parser = subparsers.add_parser('game', help='\
-    game --field <field_paths> --players <players_count> --start_positions <positions as (x,y)>')
-    check_parser.add_argument('--field', type=str, action='store', dest='field_paths')
+    game --fields <field_paths> --players <players_count> --start_positions <positions as (x,y)>')
+    check_parser.add_argument('--fields', type=str, action='store', dest='field_paths')
     check_parser.add_argument('--players', type=int, action='store', dest='players', default=0)
     check_parser.add_argument('--start_positions', type=str, nargs='+', action='store', dest='positions', default=None)
     check_parser.add_argument('--random_positions', action='store_true', dest='random_positions', default=False)

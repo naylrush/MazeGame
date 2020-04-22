@@ -7,6 +7,7 @@ from models.player import Player
 
 class GameImpl:
     def __init__(self):
+        self.general_field_id = 0
         self.current_player_index = 0
 
     def calc_next_player(self, game):
@@ -15,15 +16,16 @@ class GameImpl:
 
     def place_players(self, game, players_count, players_positions):
         players = []
+        general_game_field = game.game_fields[self.general_field_id]
         for i in range(players_count):
             players.append(Player())
             if players_positions is not None and i < len(players_positions):
                 players[-1].start_position = players_positions[i]
-                game.game_fields[0].add_player_at(players[-1], players_positions[i])
+                general_game_field.add_player_at(players[-1], players_positions[i])
             else:
-                random_position = random_position_on_field(game.game_fields[0])
+                random_position = random_position_on_field(general_game_field)
                 players[-1].start_position = random_position
-                game.game_fields[0].add_player_at(players[-1], random_position)
+                general_game_field.add_player_at(players[-1], random_position)
         return players
 
     def can_player_go(self, game):
@@ -43,9 +45,10 @@ class GameImpl:
 
     def kill_player(self, game, killed_player):
         killed_player.stun = 1
-        game.game_fields[0].player_position(killed_player).inventory = deepcopy(killed_player.inventory)
+        killed_player_field = game.game_fields[killed_player.field_id]
+        killed_player_field.player_position(killed_player).inventory = deepcopy(killed_player.inventory)
         killed_player.inventory.reset()
-        game.game_fields[0].player_go_to(killed_player, killed_player.start_position)
+        killed_player_field.player_go_to(killed_player, killed_player.start_position)
         print('Player {} kills Player {}!'.format(game.current_player.id, killed_player.id))
         print('Player {} has been teleported to his start position'.format(killed_player.id))
 
@@ -54,9 +57,10 @@ class GameImpl:
             print('You are out of bullets')
             return False
         game.current_player.inventory.bullets -= 1
-        current_position = deepcopy(game.game_fields[0].player_position(game.current_player))
-        while not game.game_fields[0].field.is_out_of_field(current_position):
-            players = game.game_fields[0].players_at(current_position)
+        current_field = game.game_fields[game.current_player.field_id]
+        current_position = deepcopy(current_field.player_position(game.current_player))
+        while not current_field.field.is_out_of_field(current_position):
+            players = current_field.players_at(current_position)
             if len(players) != 0 and not (len(players) == 1 and game.current_player in players):
                 if len(players) == 1 and game.current_player in players:
                     current_position.shift_to(direction)
@@ -93,7 +97,8 @@ For more information read this —— https://github.com/NaylRush/MazeGame
 
     def go_to(self, game, direction: Direction):
         # before step
-        current_cell = game.game_fields[0].player_cell(game.current_player)
+        current_field = game.game_fields[game.current_player.field_id]
+        current_cell = current_field.player_cell(game.current_player)
         result = current_cell.can_go_this_direction(game, self, direction)
         if result is None:
             return
@@ -101,10 +106,10 @@ For more information read this —— https://github.com/NaylRush/MazeGame
             self.unsuccessful()
             return
         # step
-        if not game.game_fields[0].player_try_go_to(game.current_player, direction):
+        if not current_field.player_try_go_to(game.current_player, direction):
             self.unsuccessful()
             return
-        current_cell = game.game_fields[0].player_cell(game.current_player)
+        current_cell = current_field.player_cell(game.current_player)
         current_cell.take_inventory(game)
         current_cell.arrive(game, self)
         self.successful()
