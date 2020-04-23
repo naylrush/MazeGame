@@ -8,6 +8,9 @@ class Position:
         self.x = x
         self.y = y
 
+    def as_tuple(self):
+        return self.x, self.y
+
     def __add__(self, other):
         self.x += other.x
         self.y += other.y
@@ -17,10 +20,10 @@ class Position:
         self.y = -self.y
 
     def __eq__(self, other):
-        return (self.x, self.y) == (other.x, other.y)
+        return self.as_tuple() == other.as_tuple()
 
     def __str__(self):
-        return str((self.x, self.y))
+        return str(self.as_tuple())
 
     # because of the way of storage a field
     def shift_to(self, direction: Direction):
