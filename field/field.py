@@ -1,5 +1,4 @@
 
-from field.field_writer import write_field
 from models.position import Position
 
 
@@ -16,6 +15,3 @@ class Field:
 
     def is_out_of_field(self, position: Position):
         return position.x < 0 or position.x >= self.x_size or position.y < 0 or position.y >= self.y_size
-
-    def write_to(self, path=''):
-        write_field(self, path)

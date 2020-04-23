@@ -1,29 +1,42 @@
 
 from copy import deepcopy
-from models.cell import Empty, Stun, RubberRoom, Teleport, Exit
+from models.cell import Empty, Stun, RubberRoom, Teleport, Sleep, Exit
 from models.direction import DOWN, RIGHT
 from models.position import Position
 
 
-def write_field(field, path=''):
-    sym_field = [[] for _ in range(field.x_size * 2 - 1)]
+def write_fields(fields, path=''):
+    unique_cells = {}
 
+    sym_fields = []
+    teleport_sleep_count = 0
+    for field in fields:
+        sym_fields.append(generate_sym_field(field, teleport_sleep_count, unique_cells))
+
+    unique_cells.pop(Empty().to_symbol())
+    symbol_command = generate_command_by_symbol(unique_cells)
+
+    sym_fields_with_size = [(sym_fields[i], (fields[i].x_size, fields[i].y_size)) for i in range(len(fields))]
+    if path == '':
+        print_sym_fields_in_command_line(sym_fields_with_size, symbol_command)
+    else:
+        print_sym_fields_in_file(path, sym_fields_with_size, symbol_command)
+
+
+def generate_sym_field(field, teleport_sleep_count, unique_cells):
     empty_sym = Empty().to_symbol()
     empty_border_sym = ' '
 
-    unique_cells = {}
-
-    # generate symbol field
-    teleport_count = 0
+    sym_field = [[] for _ in range(field.x_size * 2 - 1)]
     for i in range(field.x_size * 2 - 1):
         for j in range(field.y_size * 2 - 1):
             cell = field[Position(i // 2, j // 2)]
             if i & 1 == 0:
                 if j & 1 == 0:
                     cell_symbol = cell.to_symbol()
-                    if isinstance(cell, Teleport):
-                        teleport_count += 1
-                        cell_symbol = str(teleport_count)
+                    if isinstance(cell, Teleport) or isinstance(cell, Sleep):
+                        teleport_sleep_count += 1
+                        cell_symbol = str(teleport_sleep_count)
                     sym_field[i].append(cell_symbol)
                     unique_cells[cell_symbol] = deepcopy(cell)
                 else:
@@ -33,9 +46,10 @@ def write_field(field, path=''):
                     sym_field[i].append(DOWN.to_symbol() if cell.has_border_at(DOWN) else empty_sym)
                 else:
                     sym_field[i].append(empty_border_sym)
+    return sym_field
 
-    unique_cells.pop(Empty().to_symbol())
-    # generate command by symbol
+
+def generate_command_by_symbol(unique_cells):
     symbol_command = {}
     for cell_symbol, cell in unique_cells.items():
         command = cell.name + '('
@@ -45,24 +59,33 @@ def write_field(field, path=''):
             command += str(cell.duration)
         elif isinstance(cell, Teleport):
             command += str(cell.destination)
+        elif isinstance(cell, Sleep):
+            sleep_map_coords = (cell.destination_map_id, cell.destination_position.x, cell.destination_position.y)
+            command += '{}, {}'.format(cell.duration, sleep_map_coords)
         command += ')'
         symbol_command[cell_symbol] = command
+    return symbol_command
 
-    # print
-    if path == '':
-        print(field.x_size, field.y_size)
+
+def print_sym_fields_in_command_line(sym_fields_with_size, symbol_command):
+    print(len(sym_fields_with_size))
+    for sym_field, size in sym_fields_with_size:
+        print(size[0], size[1])
         for line in sym_field:
             print(*line, sep='')
-        for symbol, command in symbol_command.items():
-            print(symbol, command)
-    else:
-        file = open(path, "w+")
-        with file as field_txt:
-            field_txt.write('{} {}\n'.format(field.x_size, field.y_size))
+    for symbol, command in symbol_command.items():
+        print(symbol, command)
+
+
+def print_sym_fields_in_file(path, sym_fields_with_size, symbol_command):
+    file = open(path, "w+")
+    with file as field_txt:
+        field_txt.write('{}\n'.format(len(sym_fields_with_size)))
+        for sym_field, size in sym_fields_with_size:
+            field_txt.write('{} {}\n'.format(size[0], size[1]))
             for line in sym_field:
                 for sym in line:
                     field_txt.write(sym)
                 field_txt.write('\n')
-            for symbol, command in symbol_command.items():
-                field_txt.write('{} {}\n'.format(symbol, command))
-        file.close()
+        for symbol, command in symbol_command.items():
+            field_txt.write('{} {}\n'.format(symbol, command))
