@@ -11,26 +11,25 @@ class Position:
     def as_tuple(self):
         return self.x, self.y
 
-    def __add__(self, other):
-        self.x += other.x
-        self.y += other.y
+    def __iadd__(self, other):
+        assert isinstance(other, Position) or isinstance(other, Direction)
+        if isinstance(other, Position):
+            self.x += other.x
+            self.y += other.y
+        else:
+            # because of the way of storage a field
+            shift_by_direction = {UP: Position(-1, 0), LEFT: Position(0, -1), DOWN: Position(1, 0), RIGHT: Position(0, 1)}
+            direction = other
+            self.__iadd__(shift_by_direction[direction])
+        return self
 
-    def __isub__(self):
-        self.x = -self.x
-        self.y = -self.y
+    def __add__(self, other):
+        copy = deepcopy(self)
+        copy += other
+        return copy
 
     def __eq__(self, other):
         return self.as_tuple() == other.as_tuple()
 
     def __str__(self):
         return str(self.as_tuple())
-
-    # because of the way of storage a field
-    def shift_to(self, direction: Direction):
-        shift_by_direction = {UP: Position(-1, 0), LEFT: Position(0, -1), DOWN: Position(1, 0), RIGHT: Position(0, 1)}
-        self.__add__(shift_by_direction[direction])
-
-    def copy_shift_to(self, direction: Direction):
-        copy = deepcopy(self)
-        copy.shift_to(direction)
-        return copy

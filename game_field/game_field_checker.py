@@ -29,7 +29,7 @@ def find_exit(game_field, queue):
         else:
             for direction in Direction:
                 if game_field.player_can_go_to(current_player, direction):
-                    new_position = current_player_position.copy_shift_to(direction)
+                    new_position = current_player_position + direction
                     if not visited[new_position.x][new_position.y]:
                         add_player(game_field, queue, new_position)
     return exit_position
@@ -46,7 +46,7 @@ def bypass_field(exit_position, game_field, queue):
                 add_player(game_field, queue, teleport_point)
         for direction in Direction:
             if not game_field.player_cell(current_player).has_border_at(direction):
-                new_position = game_field.player_position(current_player).copy_shift_to(direction)
+                new_position = game_field.player_position(current_player) + direction
                 if not game_field.field.is_out_of_field(new_position) and not visited[new_position.x][new_position.y]:
                     if game_field.player_can_go_from_to(new_position, direction.opposite()):
                         visited[new_position.x][new_position.y] = True

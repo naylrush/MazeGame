@@ -46,15 +46,15 @@ class GameField:
     def player_go_to(self, player, destination):
         assert isinstance(destination, Direction) or isinstance(destination, Position)
         if isinstance(destination, Direction):
-            destination = self.position_by_player[player].copy_shift_to(destination)
+            destination = self.position_by_player[player] + destination
         player_position = self.position_by_player[player]
         self.players_at_position[player_position.x][player_position.y].remove(player)
         self.position_by_player[player] = destination
         self.players_at_position[destination.x][destination.y].add(player)
 
     def player_can_go_from_to(self, position, direction):
-        if self.field[position].has_border_at(direction) or\
-                self.field.is_out_of_field(position.copy_shift_to(direction)) or\
+        if self.field.has_wall_at(position, direction) or\
+                self.field.is_out_of_field(position + direction) or\
                 (isinstance(self.field[position], RubberRoom) and
                  self.field[position].direction != direction):
             return False

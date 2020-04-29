@@ -86,7 +86,7 @@ class GameImpl:
             players = current_field.players_at(current_position)
             if players and not (len(players) == 1 and game.current_player in players):
                 if len(players) == 1 and game.current_player in players:
-                    current_position.shift_to(direction)
+                    current_position += direction
                     break
                 killed_player = players.pop()
                 if killed_player == game.current_player:
@@ -101,7 +101,7 @@ class GameImpl:
                     return True
                 self.kill_player(game, killed_player)
                 return True
-            current_position.shift_to(direction)
+            current_position += direction
         print('Your shot did not hit anyone')
         return True
 
