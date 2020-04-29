@@ -1,6 +1,6 @@
 
 class Inventory:
-    def __init__(self, has_key=False):
+    def __init__(self, *, has_key=False):
         self.bullets = 0
         self.max_bullets = 3
         self.has_key = has_key

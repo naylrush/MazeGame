@@ -1,6 +1,6 @@
 
 from copy import deepcopy
-from models.cell import Empty, Stun, RubberRoom, Teleport, Sleep, Exit
+from models.cell import Empty, Key, Stun, RubberRoom, Teleport, Sleep, Exit
 from models.direction import DOWN, RIGHT
 from models.position import Position
 

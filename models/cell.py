@@ -1,5 +1,6 @@
 
 from models.direction import Direction
+from models.inventory import Inventory
 from models.position import Position
 
 
@@ -45,6 +46,12 @@ class Empty(Cell):
 
     def to_symbol(self):
         return '.'
+
+
+class Key(Cell):
+    def __init__(self):
+        super().__init__()
+        self.inventory = Inventory(has_key=True)
 
 
 class Stun(Cell):

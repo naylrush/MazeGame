@@ -3,11 +3,11 @@ R . D .
 _ . . .
 E|. 1|S
 . . _ .
-. S . .
+. S . K
 _ _ _ _
 . A R 2
-Key at (2, 3)
 E Exit(LEFT)
+K Key()
 R RubberRoom(RIGHT)
 D RubberRoom(DOWN)
 S Stun(2)

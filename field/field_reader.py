@@ -1,9 +1,8 @@
 
 from copy import deepcopy
 from field.field import Field
-from models.cell import Empty, Stun, RubberRoom, Teleport, Armory, Sleep, Exit
+from models.cell import Empty, Key, Stun, RubberRoom, Teleport, Armory, Sleep, Exit
 from models.direction import UP, LEFT, DOWN, RIGHT
-from models.inventory import Inventory
 from models.position import Position
 
 
@@ -33,14 +32,11 @@ def read_fields(path):
 
 def find_and_read_field_symbols(lines, field_amount):
     current_line = 0
-    phrase = 'Key at '
 
     # jump to cell symbols
     for _ in range(field_amount):
         x_size = int(lines[current_line].split()[0])
         current_line += x_size * 2
-        if lines[current_line][:len(phrase)] == phrase:
-            current_line += 1
 
     # read cell symbols
     symbol_by_cell = {Empty().to_symbol(): Empty()}
@@ -55,18 +51,6 @@ def read_field(lines, symbol_by_cell):
     # read size
     x_size, y_size = lines[0].split()
     x_size, y_size = int(x_size), int(y_size)
-
-    # read key
-    game_with_key = False
-    key_position = None
-    phrase = 'Key at '
-    if lines[x_size * 2][:len(phrase)] == phrase:
-        game_with_key = True
-        position = lines[x_size * 2][len(phrase):]
-        x, y = position[1:len(position) - 2].split(',')
-        key_position = Position(int(x), int(y))
-        if key_position.x >= x_size or key_position.y >= y_size:
-            raise Exception('Key is unreachable')
 
     # read field
     field = [[] for _ in range(x_size)]
@@ -102,8 +86,4 @@ def read_field(lines, symbol_by_cell):
                 destination = field[x][y].destination
                 field[destination.x][destination.y].teleport_dest_from.append(Position(x, y))
 
-    # add key
-    if game_with_key:
-        field[key_position.x][key_position.y].inventory = Inventory(True)
-
-    return Field(field, game_with_key)
+    return Field(field, symbol_by_cell.get(Key(), None) is not None)
