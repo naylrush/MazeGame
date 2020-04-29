@@ -20,15 +20,6 @@ class Cell:
     def to_symbol(self):
         return self.name[0]
 
-    def take_inventory(self, game):
-        if self.inventory is not None:
-            print('You have got someone\'s inventory!')
-            if self.inventory.has_key:
-                print('You have got a key!')
-            game.current_player.inventory.append(self.inventory)
-            self.inventory = None
-            print(game.current_player.inventory)
-
     def can_go_this_direction(self, game, game_impl, direction):
         return True
 

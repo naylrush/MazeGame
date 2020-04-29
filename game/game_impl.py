@@ -53,6 +53,15 @@ class GameImpl:
         else:
             game.current_player.sleep_times[-1] -= 1
 
+    def take_inventory(self, game, cell):
+        if cell.inventory is not None:
+            print('You have got someone\'s inventory!')
+            if cell.inventory.has_key:
+                print('You have got a key!')
+            game.current_player.inventory.append(cell.inventory)
+            cell.inventory = None
+            print(game.current_player.inventory)
+
     def successful(self):
         print('You passed')
 
@@ -140,6 +149,6 @@ For more information read this —— https://github.com/NaylRush/MazeGame
             return
         current_field.player_go_to(game.current_player, direction)
         current_cell = current_field.player_cell(game.current_player)
-        current_cell.take_inventory(game)
+        self.take_inventory(game, current_cell)
         current_cell.arrive(game, self)
         self.successful()
