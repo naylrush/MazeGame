@@ -8,25 +8,23 @@ from models.position import Position
 
 def read_fields(path):
     fields = []
-    file = open(path, 'r')
-    with file as field_txt:
-        lines = field_txt.readlines()
-        field_txt.close()
-        file.close()
+    with open(path, 'r') as fields_txt:
+        lines = fields_txt.readlines()
 
-        if len(lines[0].split()) == 2:
-            symbol_by_cell = find_and_read_field_symbols(lines, 1)
-            return [read_field(lines, symbol_by_cell)]
+    if len(lines[0].split()) == 2:
+        symbol_by_cell = find_and_read_field_symbols(lines, 1)
+        return [read_field(lines, symbol_by_cell)]
 
-        field_amount = int(lines[0])
-        lines.pop(0)
-        symbol_by_cell = find_and_read_field_symbols(lines, field_amount)
-        current_line = 0
-        for _ in range(field_amount):
-            x_size = int(lines[current_line].split()[0])
-            field_lines = [lines[current_line + i] for i in range(x_size * 2 + 1)]
-            fields.append(read_field(field_lines, symbol_by_cell))
-            current_line += x_size * 2 + (1 if fields[-1].has_key else 0)
+    field_amount = int(lines[0])
+    lines.pop(0)
+    symbol_by_cell = find_and_read_field_symbols(lines, field_amount)
+    current_line = 0
+    for _ in range(field_amount):
+        x_size = int(lines[current_line].split()[0])
+        field_lines = [lines[current_line + i] for i in range(x_size * 2 + 1)]
+        fields.append(read_field(field_lines, symbol_by_cell))
+        current_line += x_size * 2 + (1 if fields[-1].has_key else 0)
+
     return fields
 
 
@@ -40,8 +38,8 @@ def find_and_read_field_symbols(lines, field_amount):
 
     # read cell symbols
     symbol_by_cell = {Empty().to_symbol(): Empty()}
-    for i in range(current_line, len(lines)):
-        cell_type, command = lines[i][:1], lines[i][2:]
+    for line in lines[current_line:]:
+        cell_type, command = line.split(maxsplit=1)
         symbol_by_cell[cell_type] = eval(command)
 
     return symbol_by_cell
@@ -49,8 +47,7 @@ def find_and_read_field_symbols(lines, field_amount):
 
 def read_field(lines, symbol_by_cell):
     # read size
-    x_size, y_size = lines[0].split()
-    x_size, y_size = int(x_size), int(y_size)
+    x_size, y_size = map(int, lines[0].split())
 
     # read field
     field = [[] for _ in range(x_size)]
@@ -59,7 +56,6 @@ def read_field(lines, symbol_by_cell):
         y = 0
         for sym in lines[1 + x * 2][:y_size * 2:2]:
             cell = deepcopy(symbol_by_cell[sym])
-            cell.locate_at(Position(x, y))
             field[x].append(cell)
             y += 1
     # read vertical walls
@@ -86,4 +82,4 @@ def read_field(lines, symbol_by_cell):
                 destination = field[x][y].destination
                 field[destination.x][destination.y].teleport_dest_from.append(Position(x, y))
 
-    return Field(field, symbol_by_cell.get(Key(), None) is not None)
+    return Field(field, has_key=symbol_by_cell.get(Key().to_symbol(), None) is not None)

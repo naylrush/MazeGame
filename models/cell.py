@@ -7,13 +7,9 @@ from models.position import Position
 class Cell:
     def __init__(self):
         self.name = type(self).__name__
-        self.position = None
         self.borders = {direction: False for direction in Direction}
         self.teleport_dest_from = []
         self.inventory = None
-
-    def locate_at(self, position):
-        self.position = position
 
     def add_border_at(self, direction: Direction):
         self.borders[direction] = True
@@ -110,12 +106,12 @@ class Sleep(Cell):
         assert isinstance(coords, tuple) and len(coords) == 3
         super().__init__()
         self.duration = duration
-        self.destination_map_id = coords[0]
+        self.destination_field_id = coords[0]
         self.destination_position = Position(coords[1], coords[2])
 
     def arrive(self, game, game_impl):
-        game.game_fields[self.destination_map_id].add_player_at(game.current_player, self.destination_position)
-        game.current_player.field_id.append(self.destination_map_id)
+        game.game_fields[self.destination_field_id].add_player_at(game.current_player, self.destination_position)
+        game.current_player.field_id.append(self.destination_field_id)
         game.current_player.sleep_for(self.duration)
 
 
@@ -132,7 +128,7 @@ class Exit(Cell):
         else:
             if game.current_player.is_sleeping():
                 print('You won the game! But it was a dream and you waked up...')
-                game_impl.wake_up_player()
+                game_impl.wake_up_player(game, game.current_player)
                 return None
             game.game_is_over = True
             print('Game is over! Player {} wins!'.format(game.current_player.id))

@@ -18,7 +18,7 @@ class Player:
         self.id = total_ids
         total_ids += 1
         self.inventory = Inventory()
-        self.ghost_inventory = []
+        self.sleep_inventories = []
         self.stun = 0
         self.sleep_times = []
         self.field_id = [0]
@@ -27,12 +27,12 @@ class Player:
     def sleep_for(self, duration):
         assert isinstance(duration, int)
         self.sleep_times.append(duration)
-        self.ghost_inventory.append(deepcopy(self.inventory))
+        self.sleep_inventories.append(deepcopy(self.inventory))
 
     def is_sleeping(self):
-        return len(self.sleep_times) == 0 and self.sleep_times[-1] > 0
+        return self.sleep_times and self.sleep_times[-1] > 0
 
     def wake_up(self):
         self.stun = 0
-        self.sleep_times.pop(-1)
-        self.ghost_inventory.pop(-1)
+        self.sleep_times.pop()
+        self.inventory = self.sleep_inventories.pop()

@@ -1,22 +1,18 @@
 
-from field.field import Field
 from game.game_impl import GameImpl
 from game_field.game_field import GameField
 from models.direction import Direction, direction_by_key
-from models.position import Position
 
 
 class Game:
     def __init__(self, fields, players_count, players_positions=None):
-        assert isinstance(fields, type([Field]))
+        assert isinstance(fields, list)
         assert isinstance(players_count, int)
         assert players_count > 0
         if players_positions is not None:
-            assert isinstance(players_positions, type([Position]))
+            assert isinstance(players_positions, list)
 
-        self.game_fields = []
-        for i in range(len(fields)):
-            self.game_fields.append(GameField(fields[i]))
+        self.game_fields = [GameField(field) for field in fields]
         self.game_fields[0].check_field()
 
         self.game_impl = GameImpl()

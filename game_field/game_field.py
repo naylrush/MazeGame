@@ -55,20 +55,14 @@ class GameField:
     def player_can_go_from_to(self, position, direction):
         if self.field[position].has_border_at(direction) or\
                 self.field.is_out_of_field(position.copy_shift_to(direction)) or\
-                (isinstance(self.field[position], RubberRoom) and self.field[position].direction != direction):
+                (isinstance(self.field[position], RubberRoom) and
+                 self.field[position].direction != direction):
             return False
         return True
 
     def player_can_go_to(self, player, direction):
         player_position = self.position_by_player[player]
         return self.player_can_go_from_to(player_position, direction)
-
-    def player_try_go_to(self, player, direction):
-        if self.player_can_go_to(player, direction):
-            self.player_go_to(player, direction)
-            return True
-        else:
-            return False
 
     def check_field(self):
         position = check_field(self)

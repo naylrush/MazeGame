@@ -41,10 +41,10 @@ class GameImpl:
     def wake_up_player(self, game, player):
         player.wake_up()
         game.game_fields[player.field_id[-1]].remove_player(player)
-        player.field_id.pop(-1)
+        player.field_id.pop()
 
     def try_wake_up_player(self, game):
-        if len(game.current_player.sleep_times) == 0:
+        if not game.current_player.sleep_times:
             return
         if game.current_player.sleep_times[-1] == 0:
             self.wake_up_player(game, game.current_player)
@@ -84,7 +84,7 @@ class GameImpl:
         current_position = deepcopy(current_field.player_position(game.current_player))
         while not current_field.field.is_out_of_field(current_position):
             players = current_field.players_at(current_position)
-            if len(players) != 0 and not (len(players) == 1 and game.current_player in players):
+            if players and not (len(players) == 1 and game.current_player in players):
                 if len(players) == 1 and game.current_player in players:
                     current_position.shift_to(direction)
                     break
@@ -135,9 +135,10 @@ For more information read this —— https://github.com/NaylRush/MazeGame
             self.unsuccessful()
             return
         # step
-        if not current_field.player_try_go_to(game.current_player, direction):
+        if not current_field.player_can_go_to(game.current_player, direction):
             self.unsuccessful()
             return
+        current_field.player_go_to(game.current_player, direction)
         current_cell = current_field.player_cell(game.current_player)
         current_cell.take_inventory(game)
         current_cell.arrive(game, self)

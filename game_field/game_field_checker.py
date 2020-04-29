@@ -16,7 +16,7 @@ def add_player(game_field, queue, position):
 def find_exit(game_field, queue):
     exit_position = None
     visited = [[False for _ in range(game_field.y_size)] for _ in range(game_field.x_size)]
-    while len(queue) > 0:  # DFS
+    while queue:  # DFS
         current_player = queue.popleft()
         current_player_position = game_field.player_position(current_player)
         visited[current_player_position.x][current_player_position.y] = True
@@ -38,7 +38,7 @@ def find_exit(game_field, queue):
 def bypass_field(exit_position, game_field, queue):
     visited = [[False for _ in range(game_field.y_size)] for _ in range(game_field.x_size)]
     visited[exit_position.x][exit_position.y] = True
-    while len(queue) > 0:
+    while queue:
         current_player = queue.popleft()
         for teleport_point in game_field.player_cell(current_player).teleport_dest_from:
             if not visited[teleport_point.x][teleport_point.y]:
@@ -53,7 +53,6 @@ def bypass_field(exit_position, game_field, queue):
                         add_player(game_field, queue, new_position)
                         new_player = Player()
                         game_field.add_player_at(new_player, new_position)
-                        queue.appendleft(new_player)
     return visited
 
 

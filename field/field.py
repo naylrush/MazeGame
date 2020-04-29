@@ -3,8 +3,8 @@ from models.position import Position
 
 
 class Field:
-    def __init__(self, field, has_key=False):
-        assert isinstance(field, type([[]]))
+    def __init__(self, field, *, has_key=False):
+        assert isinstance(field, list)
         self.field = field
         self.has_key = has_key
         self.x_size = len(self.field)
