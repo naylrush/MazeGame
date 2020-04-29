@@ -51,30 +51,12 @@ def read_field(lines, symbol_by_cell):
 
     # read field
     field = [[] for _ in range(x_size)]
-    # read cells
-    for x in range(x_size):
-        y = 0
-        for sym in lines[1 + x * 2][:y_size * 2:2]:
-            cell = deepcopy(symbol_by_cell[sym])
-            field[x].append(cell)
-            y += 1
-    # read vertical walls
-    for line in range(x_size):
-        column = 0
-        for sym in lines[1 + line * 2][1:y_size * 2:2]:
-            if sym == '|':
-                field[line][column].add_border_at(RIGHT)
-                field[line][column + 1].add_border_at(LEFT)
-            column += 1
-    # read horizontal walls
-    for column in range(x_size - 1):
-        line = 0
-        for sym in lines[2 + column * 2][:y_size * 2:2]:
-            if sym == '_' or sym == '-':
-                field[column][line].add_border_at(DOWN)
-                field[column + 1][line].add_border_at(UP)
-            line += 1
 
+    read_cells(field, lines, symbol_by_cell, x_size, y_size)
+
+    walls = read_walls(lines, x_size, y_size)
+
+    # will be deleted in the next commit
     # add teleport points
     for x in range(x_size):
         for y in range(y_size):
@@ -82,4 +64,35 @@ def read_field(lines, symbol_by_cell):
                 destination = field[x][y].destination
                 field[destination.x][destination.y].teleport_dest_from.append(Position(x, y))
 
-    return Field(field, has_key=symbol_by_cell.get(Key().to_symbol(), None) is not None)
+    return Field(field, walls, has_key=symbol_by_cell.get(Key().to_symbol(), None) is not None)
+
+
+def read_cells(field, lines, symbol_by_cell, x_size, y_size):
+    for x in range(x_size):
+        y = 0
+        for sym in lines[1 + x * 2][:y_size * 2:2]:
+            cell = deepcopy(symbol_by_cell[sym])
+            field[x].append(cell)
+            y += 1
+
+
+def read_walls(lines, x_size, y_size):
+    walls = [[[False, False] for _ in range(y_size)] for _ in range(x_size)]
+
+    # read vertical walls
+    for line in range(x_size):
+        column = 0
+        for sym in lines[1 + line * 2][1:y_size * 2:2]:
+            if sym == '|':
+                walls[line][column][0] = True
+            column += 1
+
+    # read horizontal walls
+    for column in range(x_size - 1):
+        line = 0
+        for sym in lines[2 + column * 2][:y_size * 2:2]:
+            if sym == '_' or sym == '-':
+                walls[column][line][1] = True
+            line += 1
+
+    return walls

@@ -26,12 +26,13 @@ def write_fields(fields, path=None):
 
 def generate_sym_field(field, teleport_sleep_count, unique_cells):
     empty_sym = Empty().to_symbol()
-    empty_border_sym = ' '
+    empty_wall_sym = ' '
 
     sym_field = [[] for _ in range(field.x_size * 2 - 1)]
     for i in range(field.x_size * 2 - 1):
         for j in range(field.y_size * 2 - 1):
-            cell = field[Position(i // 2, j // 2)]
+            cell_position = Position(i // 2, j // 2)
+            cell = field[cell_position]
             if i % 2 == 0:
                 if j % 2 == 0:
                     cell_symbol = cell.to_symbol()
@@ -41,12 +42,14 @@ def generate_sym_field(field, teleport_sleep_count, unique_cells):
                     sym_field[i].append(cell_symbol)
                     unique_cells[cell_symbol] = deepcopy(cell)
                 else:
-                    sym_field[i].append(RIGHT.to_symbol() if cell.has_border_at(RIGHT) else empty_border_sym)
+                    wall_sym = RIGHT.to_symbol() if field.has_wall_at(cell_position, RIGHT) else empty_wall_sym
+                    sym_field[i].append(wall_sym)
             else:
                 if j & 1 == 0:
-                    sym_field[i].append(DOWN.to_symbol() if cell.has_border_at(DOWN) else empty_sym)
+                    cell_sym = DOWN.to_symbol() if field.has_wall_at(cell_position, DOWN) else empty_sym
+                    sym_field[i].append(cell_sym)
                 else:
-                    sym_field[i].append(empty_border_sym)
+                    sym_field[i].append(empty_wall_sym)
     return sym_field, teleport_sleep_count
 
 

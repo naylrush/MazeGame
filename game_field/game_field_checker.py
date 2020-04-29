@@ -45,7 +45,7 @@ def bypass_field(exit_position, game_field, queue):
                 visited[teleport_point.x][teleport_point.y] = True
                 add_player(game_field, queue, teleport_point)
         for direction in Direction:
-            if not game_field.player_cell(current_player).has_border_at(direction):
+            if not game_field.field.has_wall_at(game_field.player_position(current_player), direction):
                 new_position = game_field.player_position(current_player) + direction
                 if not game_field.field.is_out_of_field(new_position) and not visited[new_position.x][new_position.y]:
                     if game_field.player_can_go_from_to(new_position, direction.opposite()):
