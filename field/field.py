@@ -1,4 +1,5 @@
 
+from models.cell import Cell
 from models.direction import UP, LEFT, RIGHT
 from models.position import Position
 
@@ -14,6 +15,10 @@ class Field:
 
     def __getitem__(self, position: Position):
         return self.field[position.x][position.y]
+
+    def put_cell_at(self, position: Position, cell: Cell):
+        assert isinstance(cell, Cell)
+        self.field[position.x][position.y] = cell
 
     def is_out_of_field(self, position: Position):
         return position.x < 0 or position.x >= self.x_size or position.y < 0 or position.y >= self.y_size

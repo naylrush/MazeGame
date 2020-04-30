@@ -1,5 +1,7 @@
 
 from field.field_reader import read_fields
+from field.field_writer import write_fields
+from field.generator.field_generator import generate_field
 from game.game import Game
 from game_field.game_field import GameField, random_position_on_field
 from models.position import Position
@@ -28,7 +30,20 @@ def play_game(args):
         args.field_paths = [args.field_paths]
     fields = []
     for field_path in args.field_paths:
-        fields += read_fields(field_path)
+        if field_path == 'random_field':
+            x_size, y_size = map(int, input("Generate field with size as x_size,y_size: ").split(','))
+            print('Generating...')
+            field = generate_field(x_size, y_size)
+            answer = input('Field path to save or Here or Enter: ').lower()
+            if answer != '':
+                if answer == 'here':
+                    write_fields([field])
+                else:
+                    write_fields([field], answer)
+                    print('Field saved')
+            fields.append(field)
+        else:
+            fields += read_fields(field_path)
     if args.players is None:
         args.players = int(input('How many players will play? — '))
     positions = []
@@ -60,7 +75,7 @@ if __name__ == "__main__":
 
     check_parser = subparsers.add_parser('game', help='\
     game --fields <field_paths> --players <players_count> --start_positions <positions as (x,y)>')
-    check_parser.add_argument('--fields', type=str, dest='field_paths')
+    check_parser.add_argument('--fields', type=str, nargs='+', dest='field_paths')
     check_parser.add_argument('--players', type=int, default=None)
     check_parser.add_argument('--start_positions', type=str, nargs='+', default=None)
     check_parser.add_argument('--random_positions', action='store_true', default=False)

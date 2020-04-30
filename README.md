@@ -54,17 +54,36 @@
 
 **Команды для запуска:**
 ```
-check --fields <field_paths>
+check --fields <field_paths / random_field>
 =====
-game --fields <field_paths> --players <players_count> --start_positions <positions as (x, y)> --random_positions
+game --fields <field_paths / random_field> --players <players_count> --start_positions <positions as (x, y)> --random_positions
 ```
 *```--start_positions``` and ```--random_positions``` are optional arguments.*
+
+**Случайная генерация поля:**
+
+Поле можно сгенерировать случайным образом, вписав ```random_field```.  
+*Поля размером выше 50x50 генерируются долго.*
+
+Поле генерируется без клеток сна. Но можно вручную создавать поля с клетками сна, ведущими на случайные поля.
+
+Размер поля выбирается в интерактивном режиме. После генерации будет предложено сохранить поле в файл или вывести в терминал.
+
+**Пример генерации поля:**
+```
+Generate field with size as x_size,y_size: 20,20
+Generating...
+Field path to save or Here or Enter: field.txt
+Field saved
+```
 
 **Примеры команд:**
 ```
 check --fields field.txt
 check --fields field1.txt field2.txt  <-- you can ckeck multiple fields in a single query
 =====
+game --fields random_field --players 1 --random_positions <-- generate random field and 
+                                                              start positions will be chosen randomly
 game --fields field.txt --random_positions <-- players amount will be chosen interactively
 game --fields field.txt --players 2  <-- start positions will be asked before the game starts
 game --fields field.txt --players 2 --random_positions <-- start positions will be chosen randomly
@@ -73,7 +92,7 @@ game --fields field.txt --players 2 --start_positions (0,0) (0,2)
 ```
 
 ## Формат описания поля:
-*Максимальное число клеток с телепортом или со сном в сумме — 10.*
+*Максимальное число клеток с телепортом или со сном в сумме — 9.*
 
 **Пример обычной карты:**
 ```
@@ -181,14 +200,3 @@ E Exit(LEFT)
 ```
 
 *Особая клетка может задаваться любым символом. Направления: UP, LEFT, DOWN, RIGHT.*
-
-## Бонусы:
-- **1 балл**. Еще один режим работы: случайная генерация карты.
-    На вход принимаем размер карты, файл, куда нужно записать созданное поле, и опционально random seed для возможности воспроизвести результат.
-    В лабиринте должны с какой-то вероятностью появляться особые клетки разных типов. Алгоритм можете выбрать какой хотите,
-    главное чтобы в итоге из любой точки можно было дойти до выхода. Вот несколько источников, где можно почитать про методы генерации обычных лабиринтов:
-    - https://en.wikipedia.org/wiki/Maze_generation_algorithm
-    - http://www.astrolog.org/labyrnth/algrithm.htm
-    - https://habr.com/ru/post/262345/
-    - https://habr.com/ru/post/176671/
-    - https://habr.com/ru/post/319532/

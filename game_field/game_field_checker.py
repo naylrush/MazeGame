@@ -46,9 +46,10 @@ def player_teleport(game_field, queue: deque, bypass: Bypass, current_player):
     current_position = game_field.player_position(current_player)
     current_cell = game_field.player_cell(current_player)
     destination = current_cell.destination
-    bypass[destination].came_from = current_position
-    game_field.player_go_to(current_player, destination)
-    queue.appendleft(current_player)
+    if not bypass[destination].visited and bypass[destination].came_from is None:
+        bypass[destination].came_from = current_position
+        game_field.player_go_to(current_player, destination)
+        queue.appendleft(current_player)
 
 
 def player_go(game_field, queue: deque, bypass: Bypass, current_player):
@@ -56,16 +57,16 @@ def player_go(game_field, queue: deque, bypass: Bypass, current_player):
     for direction in Direction:
         if game_field.player_can_go_to(current_player, direction):
             new_position = current_position + direction
-            if not bypass[new_position].visited:
+            if not bypass[new_position].visited and bypass[new_position].came_from is None:
                 bypass[new_position].came_from = current_position
                 add_player(game_field, queue, new_position)
 
 
-def find_exit(game_field):
+def find_exit(game_field, *, start_position=Position(0, 0)):
     exit_position = None
     bypass = Bypass(game_field.x_size, game_field.y_size)
     queue = deque()
-    add_player(game_field, queue, Position(0, 0))
+    add_player(game_field, queue, start_position)
     while queue:  # DFS
         current_player = queue.popleft()
         current_position = game_field.player_position(current_player)
