@@ -52,17 +52,14 @@ class GameField:
         self.position_by_player[player] = destination
         self.players_at_position[destination.x][destination.y].add(player)
 
-    def player_can_go_from_to(self, position, direction):
-        if self.field.has_wall_at(position, direction) or\
-                self.field.is_out_of_field(position + direction) or\
-                (isinstance(self.field[position], RubberRoom) and
-                 self.field[position].direction != direction):
-            return False
-        return True
-
     def player_can_go_to(self, player, direction):
         player_position = self.position_by_player[player]
-        return self.player_can_go_from_to(player_position, direction)
+        if self.field.has_wall_at(player_position, direction) or\
+                self.field.is_out_of_field(player_position + direction) or\
+                (isinstance(self.field[player_position], RubberRoom) and
+                 self.field[player_position].direction != direction):
+            return False
+        return True
 
     def check_field(self):
         position = check_field(self)

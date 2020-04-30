@@ -3,7 +3,6 @@ from copy import deepcopy
 from field.field import Field
 from models.cell import Empty, Key, Stun, RubberRoom, Teleport, Armory, Sleep, Exit
 from models.direction import UP, LEFT, DOWN, RIGHT
-from models.position import Position
 
 
 def read_fields(path):
