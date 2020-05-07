@@ -23,7 +23,7 @@ class Field:
     def is_out_of_field(self, position: Position):
         return position.x < 0 or position.x >= self.x_size or position.y < 0 or position.y >= self.y_size
 
-    def has_wall_at(self, position, direction):
+    def wall_access(self, position, direction, set_value=None):
         if self.is_out_of_field(position) or self.is_out_of_field(position + direction):
             return True
         pos = position
@@ -31,4 +31,13 @@ class Field:
             pos = position + LEFT
         if direction == UP:
             pos = position + UP
-        return self.walls[pos.x][pos.y][0 if direction == LEFT or direction == RIGHT else 1]
+        if set_value is None:
+            return self.walls[pos.x][pos.y][0 if direction == LEFT or direction == RIGHT else 1]
+        else:
+            self.walls[pos.x][pos.y][0 if direction == LEFT or direction == RIGHT else 1] = set_value
+
+    def has_wall_at(self, position, direction):
+        return self.wall_access(position, direction)
+
+    def remove_wall_at(self, position, direction):
+        return self.wall_access(position, direction, False)

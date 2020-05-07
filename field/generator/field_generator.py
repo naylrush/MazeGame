@@ -2,7 +2,7 @@ from field.field import Field
 from game_field.game_field import GameField
 from game_field.game_field_checker import check_field, find_exit
 from models.cell import Empty, Key, Stun, RubberRoom, Teleport, Armory, Sleep, Exit
-from models.direction import Direction, UP, LEFT, RIGHT
+from models.direction import Direction
 from models.player import Player
 from models.position import Position
 from random import choice, randint
@@ -56,12 +56,12 @@ def generate_walls(game_field):
         if not game_field.field.is_out_of_field(new_position) and\
                 visited[new_position.x][new_position.y] is not None and\
                 not visited[new_position.x][new_position.y]:
-            remove_wall_at(game_field.field, current_position, random_direction)
+            game_field.field.remove_wall_at(current_position, random_direction)
             game_field.player_go_to(player, new_position)
             current_position = new_position
             continue
         if game_field.field.has_wall_at(current_position, random_direction):
-            remove_wall_at(game_field.field, current_position, random_direction)
+            game_field.field.remove_wall_at(current_position, random_direction)
         unvisited_positions = []
         for direction in Direction:
             new_position = current_position + direction
@@ -85,20 +85,10 @@ def try_place_player_somewhere(game_field, player, visited):
                     if not game_field.field.is_out_of_field(new_position) and \
                             visited[new_position.x][new_position.y] is not None and\
                             not visited[new_position.x][new_position.y]:
-                        remove_wall_at(game_field.field, current_position, direction)
+                        game_field.field.remove_wall_at(current_position, direction)
                         game_field.player_go_to(player, new_position)
                         return new_position
     return None
-
-
-def remove_wall_at(field, position, direction):
-    pos = position
-    if direction == LEFT:
-        pos = position + LEFT
-    if direction == UP:
-        pos = position + UP
-    if not field.is_out_of_field(pos):
-        field.walls[pos.x][pos.y][0 if direction == LEFT or direction == RIGHT else 1] = False
 
 
 def calc_random_position_on(field: Field):
