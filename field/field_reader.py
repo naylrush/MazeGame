@@ -49,7 +49,7 @@ def read_field(lines, symbol_by_cell):
     x_size, y_size = map(int, lines[0].split())
 
     # read field
-    field = [[] for _ in range(x_size)]
+    field = [[None] * y_size for _ in range(x_size)]
 
     read_cells(field, lines, symbol_by_cell, x_size, y_size)
 
@@ -59,12 +59,10 @@ def read_field(lines, symbol_by_cell):
 
 
 def read_cells(field, lines, symbol_by_cell, x_size, y_size):
-    for x in range(x_size):
-        y = 0
-        for sym in lines[1 + x * 2][:y_size * 2:2]:
+    for x, cell_symbols in enumerate(lines[1:x_size * 2:2]):
+        for y, sym in enumerate(cell_symbols[:y_size * 2:2]):
             cell = deepcopy(symbol_by_cell[sym])
-            field[x].append(cell)
-            y += 1
+            field[x][y] = cell
 
 
 def read_walls(lines, x_size, y_size):
