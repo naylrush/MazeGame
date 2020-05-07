@@ -14,14 +14,14 @@ class GameImpl:
         self.current_player_index = (self.current_player_index + 1) % len(game.players)
         return game.players[self.current_player_index]
 
-    def place_players(self, game, players_count, players_positions):
+    def place_players(self, game, player_count, players_positions):
         players = []
         general_game_field = game.game_fields[self.general_field_id]
-        for i in range(players_count):
+        for player_id in range(player_count):
             players.append(Player())
-            if players_positions is not None and i < len(players_positions):
-                players[-1].start_position = players_positions[i]
-                general_game_field.add_player_at(players[-1], players_positions[i])
+            if players_positions is not None and player_id < len(players_positions):
+                players[-1].start_position = players_positions[player_id]
+                general_game_field.add_player_at(players[-1], players_positions[player_id])
             else:
                 random_position = random_position_on_field(general_game_field)
                 players[-1].start_position = random_position

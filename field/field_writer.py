@@ -45,7 +45,7 @@ def generate_sym_field(field, teleport_sleep_count, unique_cells):
                     wall_sym = RIGHT.to_symbol() if field.has_wall_at(cell_position, RIGHT) else empty_wall_sym
                     sym_field[i].append(wall_sym)
             else:
-                if j & 1 == 0:
+                if j % 2 == 0:
                     cell_sym = DOWN.to_symbol() if field.has_wall_at(cell_position, DOWN) else empty_sym
                     sym_field[i].append(cell_sym)
                 else:
@@ -87,8 +87,6 @@ def print_sym_fields_in_file(path, sym_fields, sizes, symbol_command):
         for sym_field, size in zip(sym_fields, sizes):
             field_txt.write('{} {}\n'.format(size[0], size[1]))
             for line in sym_field:
-                for sym in line:
-                    field_txt.write(sym)
-                field_txt.write('\n')
+                field_txt.write(''.join(line) + '\n')
         for symbol, command in symbol_command.items():
             field_txt.write('{} {}\n'.format(symbol, command))

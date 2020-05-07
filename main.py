@@ -70,14 +70,14 @@ if __name__ == "__main__":
     subparsers = parser.add_subparsers(title='modes')
 
     check_parser = subparsers.add_parser('check', help='check --fields <field_paths>')
-    check_parser.add_argument('--fields', type=str, nargs='+', dest='field_paths')
+    check_parser.add_argument('--fields', nargs='+', dest='field_paths')
     check_parser.set_defaults(func=check_field)
 
     check_parser = subparsers.add_parser('game', help='\
-    game --fields <field_paths> --players <players_count> --start_positions <positions as (x,y)>')
-    check_parser.add_argument('--fields', type=str, nargs='+', dest='field_paths')
+        game --fields <field_paths> --players <players_count> --start_positions <positions as (x,y)>')
+    check_parser.add_argument('--fields', nargs='+', dest='field_paths')
     check_parser.add_argument('--players', type=int, default=None)
-    check_parser.add_argument('--start_positions', type=str, nargs='+', default=None)
+    check_parser.add_argument('--start_positions', nargs='+', default=None)
     check_parser.add_argument('--random_positions', action='store_true', default=False)
     check_parser.set_defaults(func=play_game)
 

@@ -1,11 +1,11 @@
 from field.field import Field
 from game_field.game_field import GameField
-from game_field.game_field_checker import check_field, find_exit, Bypass
+from game_field.game_field_checker import check_field, find_exit
 from models.cell import Empty, Key, Stun, RubberRoom, Teleport, Armory, Sleep, Exit
 from models.direction import Direction, UP, LEFT, RIGHT
 from models.player import Player
 from models.position import Position
-from random import randint
+from random import choice, randint
 
 
 def generate_field(x_size, y_size):
@@ -36,7 +36,7 @@ def generate_field(x_size, y_size):
             teleport_counter += 1
             random_put_cell_on(field, Teleport(calc_random_position_on(field).as_tuple()))
 
-    while check_bad_rubber_room(game_field):
+    while fix_bad_rubber_room(game_field):
         pass
 
     return game_field.field
@@ -112,7 +112,7 @@ def calc_random_direction():
 
 def calc_random_cell_type():
     cell_types = [Stun, Stun, RubberRoom, RubberRoom, Armory, Armory, Teleport]
-    return cell_types[randint(0, len(cell_types) - 1)]
+    return choice(cell_types)
 
 
 def random_put_cell_on(field, cell, *, without_wall_at_direction=None, wall_required_at=None):
@@ -130,7 +130,7 @@ def random_put_cell_on(field, cell, *, without_wall_at_direction=None, wall_requ
             break
 
 
-def check_bad_rubber_room(game_field):
+def fix_bad_rubber_room(game_field):
     try:
         check_field(game_field)
     except LookupError as error:
@@ -142,6 +142,6 @@ def check_bad_rubber_room(game_field):
                 if bypass[current_position].visited and isinstance(game_field.field[current_position], RubberRoom):
                     game_field.field.put_cell_at(current_position, Empty())
                     return True
-        raise OverflowError
+        raise NameError('Field has no exit way by some position')
     else:
         return False

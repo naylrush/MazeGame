@@ -20,7 +20,7 @@ class Position:
             # because of the way of storage a field
             shift_by_direction = {UP: Position(-1, 0), LEFT: Position(0, -1), DOWN: Position(1, 0), RIGHT: Position(0, 1)}
             direction = other
-            self.__iadd__(shift_by_direction[direction])
+            self += shift_by_direction[direction]
         return self
 
     def __add__(self, other):
