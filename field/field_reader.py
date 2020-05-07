@@ -55,14 +55,6 @@ def read_field(lines, symbol_by_cell):
 
     walls = read_walls(lines, x_size, y_size)
 
-    # will be deleted in the next commit
-    # add teleport points
-    for x in range(x_size):
-        for y in range(y_size):
-            if isinstance(field[x][y], Teleport):
-                destination = field[x][y].destination
-                field[destination.x][destination.y].teleport_dest_from.append(Position(x, y))
-
     return Field(field, walls, has_key=symbol_by_cell.get(Key().to_symbol(), None) is not None)
 
 

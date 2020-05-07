@@ -11,12 +11,6 @@ class Cell:
         self.teleport_dest_from = []
         self.inventory = None
 
-    def add_border_at(self, direction: Direction):
-        self.borders[direction] = True
-
-    def has_border_at(self, direction: Direction):
-        return self.borders[direction]
-
     def to_symbol(self):
         return self.name[0]
 
