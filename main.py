@@ -66,20 +66,21 @@ def play_game(args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers(title='modes')
+    arg_parser = argparse.ArgumentParser()
+    subparsers = arg_parser.add_subparsers(title='modes')
 
-    check_parser = subparsers.add_parser('check', help='check --fields <field_paths>')
-    check_parser.add_argument('--fields', nargs='+', dest='field_paths')
-    check_parser.set_defaults(func=check_field)
+    parser = subparsers.add_parser('check', help='check --fields <paths>')
+    parser.add_argument('--fields', nargs='+', dest='field_paths')
+    parser.set_defaults(func=check_field)
 
-    check_parser = subparsers.add_parser('game', help='\
-        game --fields <field_paths> --players <players_count> --start_positions <positions as (x,y)>')
-    check_parser.add_argument('--fields', nargs='+', dest='field_paths')
-    check_parser.add_argument('--players', type=int, default=None)
-    check_parser.add_argument('--start_positions', nargs='+', default=None)
-    check_parser.add_argument('--random_positions', action='store_true', default=False)
-    check_parser.set_defaults(func=play_game)
 
-    args = parser.parse_args()
+    parser = subparsers.add_parser('game', help='\
+        game --fields <paths> --players <count> --start_positions <(x,y)>')
+    parser.add_argument('--fields', nargs='+', dest='field_paths')
+    parser.add_argument('--players', type=int, default=None)
+    parser.add_argument('--start_positions', nargs='+', default=None)
+    parser.add_argument('--random_positions', action='store_true', default=False)
+    parser.set_defaults(func=play_game)
+
+    args = arg_parser.parse_args()
     args.func(args)
