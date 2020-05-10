@@ -10,8 +10,9 @@ from random import choice, randint
 
 def generate_field(x_size, y_size):
     cells = [[Empty() for _ in range(y_size)] for _ in range(x_size)]
-    walls = [[[True, True] for _ in range(y_size)] for _ in range(x_size)]
-    field = Field(cells, walls, has_key=False)
+    vertical_walls = [[True for _ in range(y_size)] for _ in range(x_size)]
+    horizontal_walls = [[True for _ in range(y_size)] for _ in range(x_size)]
+    field = Field(cells, (vertical_walls, horizontal_walls), has_key=False)
     game_field = GameField(field)
 
     generate_walls(game_field)
@@ -53,8 +54,7 @@ def generate_walls(game_field):
         visited[current_position.x][current_position.y] = True
         random_direction = calc_random_direction()
         new_position = current_position + random_direction
-        if not game_field.field.is_out_of_field(new_position) and\
-                visited[new_position.x][new_position.y] is not None and\
+        if not game_field.field.is_out_of_field(new_position) and \
                 not visited[new_position.x][new_position.y]:
             game_field.field.remove_wall_at(current_position, random_direction)
             game_field.player_go_to(player, new_position)
@@ -62,14 +62,14 @@ def generate_walls(game_field):
             continue
         if game_field.field.has_wall_at(current_position, random_direction):
             game_field.field.remove_wall_at(current_position, random_direction)
-        unvisited_positions = []
+        there_are_unvisited_positions = False
         for direction in Direction:
             new_position = current_position + direction
-            if not game_field.field.is_out_of_field(new_position) and\
-                    visited[new_position.x][new_position.y] is not None and\
+            if not game_field.field.is_out_of_field(new_position) and \
                     not visited[new_position.x][new_position.y]:
-                unvisited_positions.append((new_position, direction))
-        if not unvisited_positions:
+                there_are_unvisited_positions = True
+                break
+        if not there_are_unvisited_positions:
             current_position = try_place_player_somewhere(game_field, player, visited)
             if current_position is None:
                 break
@@ -83,7 +83,6 @@ def try_place_player_somewhere(game_field, player, visited):
                 for direction in Direction:
                     new_position = current_position + direction
                     if not game_field.field.is_out_of_field(new_position) and \
-                            visited[new_position.x][new_position.y] is not None and\
                             not visited[new_position.x][new_position.y]:
                         game_field.field.remove_wall_at(current_position, direction)
                         game_field.player_go_to(player, new_position)

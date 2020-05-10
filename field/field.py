@@ -8,7 +8,7 @@ class Field:
     def __init__(self, field, walls, *, has_key=False):
         assert isinstance(field, list)
         self.field = field
-        self.walls = walls
+        self.vertical_walls, self.horizontal_walls = walls
         self.has_key = has_key
         self.x_size = len(self.field)
         self.y_size = len(self.field[0])
@@ -27,14 +27,20 @@ class Field:
         if self.is_out_of_field(position) or self.is_out_of_field(position + direction):
             return True
         pos = position
-        if direction == LEFT:
-            pos = position + LEFT
-        if direction == UP:
-            pos = position + UP
-        if set_value is None:
-            return self.walls[pos.x][pos.y][0 if direction == LEFT or direction == RIGHT else 1]
+        if direction == LEFT or direction == RIGHT:
+            if direction == LEFT:
+                pos = position + LEFT
+            if set_value is None:
+                return self.vertical_walls[pos.x][pos.y]
+            else:
+                self.vertical_walls[pos.x][pos.y] = set_value
         else:
-            self.walls[pos.x][pos.y][0 if direction == LEFT or direction == RIGHT else 1] = set_value
+            if direction == UP:
+                pos = position + UP
+            if set_value is None:
+                return self.horizontal_walls[pos.x][pos.y]
+            else:
+                self.horizontal_walls[pos.x][pos.y] = set_value
 
     def has_wall_at(self, position, direction):
         return self.wall_access(position, direction)

@@ -68,22 +68,19 @@ def read_cells(field, lines, symbol_by_cell, x_size, y_size):
 
 
 def read_walls(lines, x_size, y_size):
-    walls = [[[False, False] for _ in range(y_size)] for _ in range(x_size)]
+    vertical_walls = [[False for _ in range(y_size)] for _ in range(x_size)]
+    horizontal_walls = [[False for _ in range(y_size)] for _ in range(x_size)]
 
     # read vertical walls
     for line in range(x_size):
-        column = 0
-        for sym in lines[1 + line * 2][1:y_size * 2:2]:
+        for column, sym in enumerate(lines[1 + line * 2][1:y_size * 2:2]):
             if sym == '|':
-                walls[line][column][0] = True
-            column += 1
+                vertical_walls[line][column] = True
 
     # read horizontal walls
-    for column in range(x_size - 1):
-        line = 0
-        for sym in lines[2 + column * 2][:y_size * 2:2]:
+    for line in range(x_size):
+        for column, sym in enumerate(lines[2 + line * 2][:y_size * 2:2]):
             if sym == '_' or sym == '-':
-                walls[column][line][1] = True
-            line += 1
+                horizontal_walls[line][column] = True
 
-    return walls
+    return vertical_walls, horizontal_walls
