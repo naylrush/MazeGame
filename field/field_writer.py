@@ -56,18 +56,7 @@ def generate_sym_field(field, teleport_sleep_count, unique_cells):
 def generate_command_by_symbol(unique_cells):
     symbol_command = {}
     for cell_symbol, cell in unique_cells.items():
-        command = cell.name + '('
-        if isinstance(cell, Exit) or isinstance(cell, RubberRoom):
-            command += cell.direction.name
-        elif isinstance(cell, Stun):
-            command += str(cell.duration)
-        elif isinstance(cell, Teleport):
-            command += str(cell.destination)
-        elif isinstance(cell, Sleep):
-            sleep_field_coords = (cell.destination_field_id, cell.destination_position.x, cell.destination_position.y)
-            command += '{}, {}'.format(cell.duration, sleep_field_coords)
-        command += ')'
-        symbol_command[cell_symbol] = command
+        symbol_command[cell_symbol] = cell.command()
     return symbol_command
 
 

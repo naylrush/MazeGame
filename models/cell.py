@@ -14,6 +14,9 @@ class Cell:
     def to_symbol(self):
         return self.name[0]
 
+    def command(self):
+        return '{}()'.format(self.name)
+
     def can_go_this_direction(self, game, game_impl, direction):
         return True
 
@@ -41,6 +44,9 @@ class Stun(Cell):
         super().__init__()
         self.duration = duration
 
+    def command(self):
+        return '{}({})'.format(self.name, self.duration)
+
     def arrive(self, game, game_impl):
         game.current_player.stun = self.duration
         print('You are stunned by {} steps'. format(game.current_player.stun))
@@ -53,6 +59,9 @@ class RubberRoom(Cell):
 
     def to_symbol(self):
         return self.direction.to_char()
+
+    def command(self):
+        return '{}({})'.format(self.name, self.direction.name)
 
     def can_go_this_direction(self, game, game_impl, direction):
         if direction == self.direction:
@@ -67,6 +76,9 @@ class Teleport(Cell):
         assert isinstance(dest, tuple)
         super().__init__()
         self.destination = Position(dest[0], dest[1])
+
+    def command(self):
+        return '{}({})'.format(self.name, self.destination)
 
     def arrive(self, game, game_impl):
         current_field = game.game_fields[game.current_player.field_id[-1]]
@@ -94,6 +106,9 @@ class Sleep(Cell):
         self.destination_field_id = coords[0]
         self.destination_position = Position(coords[1], coords[2])
 
+    def command(self):
+        return '{}({}, {})'.format(self.name, self.destination_field_id, self.destination_position)
+
     def arrive(self, game, game_impl):
         game.game_fields[self.destination_field_id].add_player_at(game.current_player, self.destination_position)
         game.current_player.field_id.append(self.destination_field_id)
@@ -104,6 +119,9 @@ class Exit(Cell):
     def __init__(self, direction: Direction):
         super().__init__()
         self.direction = direction
+
+    def command(self):
+        return '{}({})'.format(self.name, self.direction.name)
 
     def can_go_this_direction(self, game, game_impl, direction):
         if direction != self.direction:
