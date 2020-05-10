@@ -23,26 +23,22 @@ def check_field(args):
             print('{}: OK'.format(i))
 
 
+def generate_and_save_field(args):
+    if args.size is None:
+        x_size, y_size = map(int, input("Generate field with size as x_size,y_size: ").split(','))
+    else:
+        x_size, y_size = map(int, args.size[1:-1].split(','))
+    print('Generating...')
+    field = generate_field(x_size, y_size)
+    write_fields([field], args.file_path)
+    print('Field saved')
+
+
 def play_game(args):
     assert isinstance(args.field_paths, list) or isinstance(args.field_paths, str)
     if isinstance(args.field_paths, str):
         args.field_paths = [args.field_paths]
-    fields = []
-    for field_path in args.field_paths:
-        if field_path == 'random_field':
-            x_size, y_size = map(int, input("Generate field with size as x_size,y_size: ").split(','))
-            print('Generating...')
-            field = generate_field(x_size, y_size)
-            answer = input('Field path to save or Here or Enter: ').lower()
-            if answer != '':
-                if answer == 'here':
-                    write_fields([field])
-                else:
-                    write_fields([field], answer)
-                    print('Field saved')
-            fields.append(field)
-        else:
-            fields += read_fields([field_path])
+    fields = read_fields(args.field_paths)
     if args.players is None:
         args.players = int(input('How many players will play? — '))
     positions = []
@@ -72,6 +68,11 @@ if __name__ == "__main__":
     parser.add_argument('--fields', nargs='+', dest='field_paths')
     parser.set_defaults(func=check_field)
 
+    parser = subparsers.add_parser('generate', help='\
+        generate --size <(x,y)> <path>')
+    parser.add_argument('--size', default=None)
+    parser.add_argument(dest='file_path')
+    parser.set_defaults(func=generate_and_save_field)
 
     parser = subparsers.add_parser('game', help='\
         game --fields <paths> --players <count> --start_positions <(x,y)>')
