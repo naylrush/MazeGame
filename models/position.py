@@ -33,3 +33,6 @@ class Position:
 
     def __str__(self):
         return str(self.as_tuple())
+
+    def __repr__(self):
+        return self.as_tuple()
