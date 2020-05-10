@@ -12,16 +12,15 @@ def check_field(args):
     assert isinstance(args.field_paths, list) or isinstance(args.field_paths, str)
     if isinstance(args.field_paths, str):
         args.field_paths = [args.field_paths]
-    for field_path in args.field_paths:
-        fields = read_fields(field_path)
-        for field in fields:
-            game_field = GameField(field)
-            try:
-                game_field.check_field()
-            except LookupError as position:
-                print('FAILED {}'.format(position))
-            else:
-                print('OK')
+    fields = read_fields(args.field_paths)
+    for i, field in enumerate(fields):
+        game_field = GameField(field)
+        try:
+            game_field.check_field()
+        except LookupError as position:
+            print('{}: FAILED {}'.format(i, position))
+        else:
+            print('{}: OK'.format(i))
 
 
 def play_game(args):
@@ -43,14 +42,14 @@ def play_game(args):
                     print('Field saved')
             fields.append(field)
         else:
-            fields += read_fields(field_path)
+            fields += read_fields([field_path])
     if args.players is None:
         args.players = int(input('How many players will play? — '))
     positions = []
     if args.start_positions is not None:
         for position in args.start_positions:
-            x, y = position[1:len(position) - 1].split(',')
-            positions.append(Position(int(x), int(y)))
+            x, y = map(int, position[1:-1].split(','))
+            positions.append(Position(x, y))
     if not args.random_positions:
         if args.players - len(positions) > 0:
             print('Field size: {}x{}'.format(fields[0].x_size, fields[0].y_size))

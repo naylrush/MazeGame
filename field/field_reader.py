@@ -5,24 +5,26 @@ from models.cell import Empty, Key, Stun, RubberRoom, Teleport, Armory, Sleep, E
 from models.direction import UP, LEFT, DOWN, RIGHT
 
 
-def read_fields(path):
+def read_fields(paths):
     fields = []
-    with open(path, 'r') as fields_txt:
-        lines = fields_txt.readlines()
+    for path in paths:
+        with open(path, 'r') as fields_txt:
+            lines = fields_txt.readlines()
 
-    if len(lines[0].split()) == 2:
-        symbol_by_cell = find_and_read_field_symbols(lines, 1)
-        return [read_field(lines, symbol_by_cell)]
+        if len(lines[0].split()) == 2:
+            symbol_by_cell = find_and_read_field_symbols(lines, 1)
+            fields += [read_field(lines, symbol_by_cell)]
+            continue
 
-    field_amount = int(lines[0])
-    lines.pop(0)
-    symbol_by_cell = find_and_read_field_symbols(lines, field_amount)
-    current_line = 0
-    for _ in range(field_amount):
-        x_size = int(lines[current_line].split()[0])
-        field_lines = [lines[current_line + i] for i in range(x_size * 2 + 1)]
-        fields.append(read_field(field_lines, symbol_by_cell))
-        current_line += x_size * 2 + (1 if fields[-1].has_key else 0)
+        field_amount = int(lines[0])
+        lines.pop(0)
+        symbol_by_cell = find_and_read_field_symbols(lines, field_amount)
+        current_line = 0
+        for _ in range(field_amount):
+            x_size = int(lines[current_line].split()[0])
+            field_lines = lines[current_line:current_line + x_size * 2 + 1]
+            fields.append(read_field(field_lines, symbol_by_cell))
+            current_line += x_size * 2 + (1 if fields[-1].has_key else 0)
 
     return fields
 
