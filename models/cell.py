@@ -7,8 +7,6 @@ from models.position import Position
 class Cell:
     def __init__(self):
         self.name = type(self).__name__
-        self.borders = {direction: False for direction in Direction}
-        self.teleport_dest_from = []
         self.inventory = None
 
     def to_symbol(self):

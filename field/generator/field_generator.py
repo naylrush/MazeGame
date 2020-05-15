@@ -141,6 +141,6 @@ def fix_bad_rubber_room(game_field):
                 if bypass[current_position].visited and isinstance(game_field.field[current_position], RubberRoom):
                     game_field.field.put_cell_at(current_position, Empty())
                     return True
-        raise NameError('Field has no exit way by some position')
+        raise Exception('Field has no exit way by some position')
     else:
         return False
