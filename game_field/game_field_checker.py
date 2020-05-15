@@ -62,45 +62,47 @@ def player_go(game_field, queue: deque, bypass: Bypass, current_player):
                 add_player(game_field, queue, new_position)
 
 
-def find_exit(game_field, *, start_position=Position(0, 0)):
-    exit_position = None
+def DFS(game_field, queue: deque, bypass: Bypass):
+    current_player = queue.popleft()
+    current_position = game_field.player_position(current_player)
+    current_cell = game_field.player_cell(current_player)
+    bypass[current_position].visited = True
+    if isinstance(current_cell, Teleport):
+        player_teleport(game_field, queue, bypass, current_player)
+    else:
+        player_go(game_field, queue, bypass, current_player)
+
+    return current_position, current_cell
+
+
+def find_exit(game_field):
     bypass = Bypass(game_field.x_size, game_field.y_size)
+
     queue = deque()
+    start_position = Position(0, 0)
     add_player(game_field, queue, start_position)
-    while queue:  # DFS
-        current_player = queue.popleft()
-        current_position = game_field.player_position(current_player)
-        current_cell = game_field.player_cell(current_player)
-        bypass[current_position].visited = True
+
+    while queue:
+        current_position, current_cell = DFS(game_field, queue, bypass)
+
         if isinstance(current_cell, Exit):
             exit_position = current_position
-            break
-        if isinstance(current_cell, Teleport):
-            player_teleport(game_field, queue, bypass, current_player)
-        else:
-            player_go(game_field, queue, bypass, current_player)
+            mark_exit_way(bypass, exit_position)
+            return exit_position, bypass
 
-    if exit_position is not None:
-        mark_exit_way(bypass, exit_position)
-
-    return exit_position is not None, bypass
+    return False, bypass
 
 
-def player_bypass_from(game_field, bypass: Bypass, position):
+def player_bypass_from(game_field, bypass: Bypass, start_position):
     queue = deque()
-    add_player(game_field, queue, position)
+    add_player(game_field, queue, start_position)
 
-    while queue:  # DFS
-        current_player = queue.popleft()
-        current_position = game_field.player_position(current_player)
+    while queue:
+        current_position, _ = DFS(game_field, queue, bypass)
+
         if bypass[current_position].on_exit_way:
             mark_exit_way(bypass, current_position)
             return True, bypass
-        current_cell = game_field.player_cell(current_player)
-        if isinstance(current_cell, Teleport):
-            player_teleport(game_field, queue, bypass, current_player)
-        bypass[current_position].visited = True
-        player_go(game_field, queue, bypass, current_player)
 
     return False, bypass
 
