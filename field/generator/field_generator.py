@@ -8,6 +8,14 @@ from models.position import Position
 from random import choice, randint
 
 
+class GenerationConfig:
+    def __init__(self, x_size, y_size):
+        self.max_exits_on_map = max(1, (x_size * y_size) // 50)
+        self.random_cell_count = randint((x_size * y_size) // 12, (x_size * y_size) // 7)
+        self.default_stun_duration = 2
+        self.max_teleport_count = 9
+
+
 def generate_field(x_size, y_size):
     cells = [[Empty() for _ in range(y_size)] for _ in range(x_size)]
     vertical_walls = [[True for _ in range(y_size)] for _ in range(x_size)]
@@ -17,19 +25,21 @@ def generate_field(x_size, y_size):
 
     generate_walls(game_field)
 
+    config = GenerationConfig(x_size, y_size)
+
     exit_direction = calc_random_direction()
-    for exit_count in range(max(1, (x_size * y_size) // 50)):
+    for exit_count in range(config.max_exits_on_map):
         random_put_cell_on(field, Exit(exit_direction), wall_required_at=exit_direction)
         random_put_cell_on(field, Key())
 
     teleport_counter = 0
-    for random_cell_count in range(randint((x_size * y_size) // 12, (x_size * y_size) // 7)):
+    for _ in range(config.random_cell_count):
         random_cell_type = calc_random_cell_type()
-        if teleport_counter == 9:
+        if teleport_counter == config.max_teleport_count:
             while random_cell_type is Teleport:
                 random_cell_type = calc_random_cell_type()
         if random_cell_type is Stun:
-            random_put_cell_on(field, Stun(2))
+            random_put_cell_on(field, Stun(config.default_stun_duration))
         elif random_cell_type is RubberRoom:
             random_direction = calc_random_direction()
             random_put_cell_on(field, RubberRoom(random_direction), without_wall_at_direction=random_direction)
