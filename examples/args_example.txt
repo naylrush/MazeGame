@@ -1,0 +1,11 @@
+Check:
+check --fields field.txt
+check --fields field1.txt field2.txt
+
+Game:
+game --fields random_field --players 1 --random_positions
+game --fields field.txt --random_positions
+game --fields field.txt --players 2
+game --fields field.txt --players 2
+game --fields field.txt --players 2 --start_positions (0,0)
+game --fields field.txt --players 2 --start_positions (0,0) (0,2)

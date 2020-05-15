@@ -1,0 +1,16 @@
+4 4
+R . D .
+_ . . .
+E|. 1|S
+. . _ .
+. S . K
+_ _ _ _
+. A R 2
+E Exit(LEFT)
+K Key()
+R RubberRoom(RIGHT)
+D RubberRoom(DOWN)
+S Stun(2)
+A Armory()
+1 Teleport((3, 0))
+2 Teleport((2, 3))
